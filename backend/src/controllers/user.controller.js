@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { hashPassword } from "../utils/hash.js";
 
 const MODULE = "[USER-REGISTRATION] [user.controller.js]";
 
@@ -53,14 +54,16 @@ const registerUser = async (req, res) => {
       });
     }
 
+    const {salt, hash} = await hashPassword(password)
     const newUser = await User.create({
       name,
       email,
       phoneNumber,
-      password,
+      password: hash,
+      salt
     });
 
-    const createdUser = await User.findById(newUser._id).select("-password");
+    const createdUser = await User.findById(newUser._id).select("-password -salt");
 
     if (!createdUser) {
       return res.status(500).json({
