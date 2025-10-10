@@ -1,5 +1,5 @@
 import { User } from "../models/user.model.js";
-import { hashPassword } from "../utils/hash.js";
+import { hashPassword, verifyPassword } from "../utils/hash.js";
 
 const MODULE = "[USER-REGISTRATION] [user.controller.js]";
 
@@ -54,16 +54,18 @@ const registerUser = async (req, res) => {
       });
     }
 
-    const {salt, hash} = await hashPassword(password)
+    const { salt, hash } = await hashPassword(password);
     const newUser = await User.create({
       name,
       email,
       phoneNumber,
       password: hash,
-      salt
+      salt,
     });
 
-    const createdUser = await User.findById(newUser._id).select("-password -salt");
+    const createdUser = await User.findById(newUser._id).select(
+      "-password -salt"
+    );
 
     if (!createdUser) {
       return res.status(500).json({
@@ -96,4 +98,73 @@ const registerUser = async (req, res) => {
   }
 };
 
-export { registerUser };
+const loginUser = async (req, res) => {
+  const validationErrors = [];
+  try {
+    const { email, password } = req.body;
+
+    if (!emailRegex.test(email?.trim()))
+      validationErrors.push("Invalid email provided");
+
+    if (!password) {
+      validationErrors.push("Password must not be empty");
+    }
+
+    if (validationErrors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        statusCode: 400,
+        module: MODULE,
+        message: "Validation failed",
+        errors: validationErrors,
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        statusCode: 401,
+        module: MODULE,
+        message: "Invalid email or password",
+      });
+    }
+
+    const isValid = await verifyPassword(password, user.password, user.salt);
+
+    if (!isValid) {
+      return res.status(401).json({
+        success: false,
+        statusCode: 401,
+        module: MODULE,
+        message: "Invalid email or password",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      statusCode: 200,
+      module: MODULE,
+      message: "Login successfull",
+      data: {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phoneNumber: user.phoneNumber
+        }
+      }
+    });
+  } catch (error) {
+    console.error(`${MODULE} Login error:`, error);
+    return res.status(500).json({
+      success: false,
+      statusCode: 500,
+      module: MODULE,
+      message: "Internal server error",
+    });
+  }
+};
+
+export { registerUser, loginUser };

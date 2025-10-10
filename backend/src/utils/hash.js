@@ -17,11 +17,11 @@ const generateSalt = () => {
   }
 };
 
-const hashPassword = async (password) => {
+//salt is optional - generates new salt if not provided
+const hashPassword = async (password, salt = generateSalt()) => {
   if (!password) throw new Error("password required");
 
   try {
-    const salt = generateSalt();
     const derivedKey = await pbkdf2Async(
       password,
       salt,
@@ -33,9 +33,6 @@ const hashPassword = async (password) => {
     return {
       salt,
       hash: derivedKey.toString("hex"),
-      iterations: ITERATIONS,
-      keylen: KEYLEN,
-      digest: DIGEST,
     };
   } catch (error) {
     console.error(`${MODULE} Failed to hash password:`, error.message);
@@ -43,4 +40,20 @@ const hashPassword = async (password) => {
   }
 };
 
-export { hashPassword };
+const verifyPassword = async (inputPassword, storedHash, storedSalt) => {
+  if (!inputPassword || !storedHash || !storedSalt) {
+    throw new Error("Missing required parameters for password verification");
+  }
+  const { hash } = await hashPassword(inputPassword, storedSalt);
+
+  const derivedBuff = Buffer.from(hash, "hex");
+  const storedBuff = Buffer.from(storedHash, "hex");
+
+  if (derivedBuff.length !== storedBuff.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(derivedBuff, storedBuff);
+};
+
+export { hashPassword, verifyPassword };
