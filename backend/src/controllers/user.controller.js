@@ -1,5 +1,6 @@
 import { User } from "../models/user.model.js";
 import { hashPassword, verifyPassword } from "../utils/hash.js";
+import { generateAccessToken } from "../utils/jwt.js";
 
 const MODULE = "[USER-REGISTRATION] [user.controller.js]";
 
@@ -142,20 +143,44 @@ const loginUser = async (req, res) => {
       });
     }
 
-    return res.status(200).json({
-      success: true,
-      statusCode: 200,
-      module: MODULE,
-      message: "Login successfull",
-      data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          phoneNumber: user.phoneNumber
-        }
-      }
-    });
+    const data = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+    };
+
+    const accessToken = generateAccessToken(data);
+
+    const responseData = {
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    };
+
+    if (process.env.NODE_ENV === "development") {
+      responseData.accessToken = accessToken;
+    }
+
+    const cookieOption = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/",
+      sameSite: "strict",
+    };
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, cookieOption)
+      .json({
+        success: true,
+        statusCode: 200,
+        module: MODULE,
+        message: "Login successfull",
+        data: responseData,
+      });
   } catch (error) {
     console.error(`${MODULE} Login error:`, error);
     return res.status(500).json({
