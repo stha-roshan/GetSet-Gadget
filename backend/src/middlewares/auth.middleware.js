@@ -24,19 +24,20 @@ const verifyUser = async (req, res, next) => {
         process.env.ACCESS_TOKEN_SECRET
       );
     } catch (error) {
-      return res.status(403).json({
+      return res.status(401).json({
         success: false,
-        statusCode: 403,
+        statusCode: 401,
         module: MODULE,
         message:
           error.name === "TokenExpiredError"
             ? "Token expired"
             : "Invalid token",
+        error: error.name,
       });
     }
 
     const user = await User.findById(decodedAccessToken?.id).select(
-      "-password -salt -phoneNumber"
+      "-password -salt -phoneNumber -refreshToken"
     );
 
     if (!user) {

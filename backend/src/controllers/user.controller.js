@@ -8,6 +8,22 @@ const emailRegex = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const nameRegex = /^[A-Za-z\s'-]+$/;
 const phoneNumberRegex = /^(98|97)[0-9]{8}$/;
 
+const accessTokenCookieOption = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV !== "development",
+  maxAge: 60 * 60 * 1000,
+  path: "/",
+  sameSite: "strict",
+};
+
+const refreshTokenCookieOption = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV !== "development",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  path: "/api/users/refresh",
+  sameSite: "strict",
+};
+
 const registerUser = async (req, res) => {
   const validationErrors = [];
 
@@ -165,22 +181,6 @@ const loginUser = async (req, res) => {
       responseData.refreshToken = refreshToken;
     }
 
-    const accessTokenCookieOption = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      maxAge: 60 * 60 * 1000,
-      path: "/",
-      sameSite: "strict",
-    };
-
-    const refreshTokenCookieOption = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: "/api/users/refresh",
-      sameSite: "strict",
-    };
-
     user.refreshToken = refreshToken;
     await user.save();
 
@@ -206,4 +206,50 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser };
+const logoutUser = async (req, res) => {
+  try {
+    const id = req.user._id;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        statusCode: 400,
+        module: MODULE,
+        message: "User not found or not authenticated",
+      });
+    }
+
+    await User.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          refreshToken: null,
+        },
+      },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .clearCookie("accessToken", accessTokenCookieOption)
+      .clearCookie("refreshToken", refreshTokenCookieOption)
+      .json({
+        success: true,
+        statusCode: 200,
+        module: MODULE,
+        message: "Logout successfull",
+      });
+  } catch (error) {
+    console.error("Logout Error:", error.message);
+
+    return res.status(500).json({
+      success: false,
+      statusCode: 500,
+      module: MODULE,
+      message: "Something went wrong during logout",
+      error: error.message,
+    });
+  }
+};
+
+export { registerUser, loginUser, logoutUser };
