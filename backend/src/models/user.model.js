@@ -28,6 +28,11 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+
+    refreshToken: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

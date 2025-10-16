@@ -1,6 +1,6 @@
 import { User } from "../models/user.model.js";
 import { hashPassword, verifyPassword } from "../utils/hash.js";
-import { generateAccessToken } from "../utils/jwt.js";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
 
 const MODULE = "[USER-REGISTRATION] [user.controller.js]";
 
@@ -150,6 +150,7 @@ const loginUser = async (req, res) => {
     };
 
     const accessToken = generateAccessToken(data);
+    const refreshToken = generateRefreshToken(data);
 
     const responseData = {
       user: {
@@ -161,19 +162,32 @@ const loginUser = async (req, res) => {
 
     if (process.env.NODE_ENV === "development") {
       responseData.accessToken = accessToken;
+      responseData.refreshToken = refreshToken;
     }
 
-    const cookieOption = {
+    const accessTokenCookieOption = {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 60 * 60 * 1000,
       path: "/",
       sameSite: "strict",
     };
 
+    const refreshTokenCookieOption = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/api/users/refresh",
+      sameSite: "strict",
+    };
+
+    user.refreshToken = refreshToken;
+    await user.save();
+
     return res
       .status(200)
-      .cookie("accessToken", accessToken, cookieOption)
+      .cookie("accessToken", accessToken, accessTokenCookieOption)
+      .cookie("refreshToken", refreshToken, refreshTokenCookieOption)
       .json({
         success: true,
         statusCode: 200,

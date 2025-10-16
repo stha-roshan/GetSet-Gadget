@@ -17,4 +17,22 @@ const generateAccessToken = (user) => {
   return accessToken;
 };
 
-export { generateAccessToken };
+const generateRefreshToken = (user) => {
+  const payload = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+  };
+
+  if (!process.env.REFRESH_TOKEN_SECRET) {
+    throw new Error("REFRESH_TOKEN_SECRET not defined");
+  }
+
+  const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+  });
+
+  return refreshToken;
+};
+
+export { generateAccessToken, generateRefreshToken };
