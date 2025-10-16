@@ -54,7 +54,7 @@ const registerUser = async (req, res) => {
       return res.status(400).json({
         success: false,
         statusCode: 400,
-        module: MODULE,
+        module: `${MODULE} registerUser`,
         message: "Validation failed",
         errors: validationErrors,
       });
@@ -66,7 +66,7 @@ const registerUser = async (req, res) => {
       return res.status(409).json({
         success: false,
         statusCode: 409,
-        module: MODULE,
+        module: `${MODULE} registerUser`,
         message: "An account with this email already exists.",
       });
     }
@@ -88,7 +88,7 @@ const registerUser = async (req, res) => {
       return res.status(500).json({
         success: false,
         statusCode: 500,
-        module: MODULE,
+        module: `${MODULE} registerUser`,
         message:
           "Something went wrong while creating your account. Please try again later.",
       });
@@ -97,18 +97,20 @@ const registerUser = async (req, res) => {
     return res.status(201).json({
       success: true,
       statusCode: 201,
-      module: MODULE,
+      module: `${MODULE} registerUser`,
       message: "Account created successfully! You can now log in.",
       user: createdUser,
     });
   } catch (error) {
-    console.error(`${MODULE} Registration failed: ${error.message}`);
+    console.error(
+      `${MODULE} registerUser -> Registration failed: ${error.message}`
+    );
     if (process.env.NODE_ENV === "development") console.error(error.stack);
 
     return res.status(500).json({
       success: false,
       statusCode: 500,
-      module: MODULE,
+      module: `${MODULE} registerUser`,
       message:
         "A server error occurred during registration. Please try again later.",
     });
@@ -131,7 +133,7 @@ const loginUser = async (req, res) => {
       return res.status(400).json({
         success: false,
         statusCode: 400,
-        module: MODULE,
+        module: `${MODULE} loginUser`,
         message: "Validation failed",
         errors: validationErrors,
       });
@@ -143,7 +145,7 @@ const loginUser = async (req, res) => {
       return res.status(401).json({
         success: false,
         statusCode: 401,
-        module: MODULE,
+        module: `${MODULE} loginUser`,
         message: "Invalid email or password",
       });
     }
@@ -154,7 +156,7 @@ const loginUser = async (req, res) => {
       return res.status(401).json({
         success: false,
         statusCode: 401,
-        module: MODULE,
+        module: `${MODULE} loginUser`,
         message: "Invalid email or password",
       });
     }
@@ -191,16 +193,16 @@ const loginUser = async (req, res) => {
       .json({
         success: true,
         statusCode: 200,
-        module: MODULE,
+        module: `${MODULE} loginUser`,
         message: "Login successfull",
         data: responseData,
       });
   } catch (error) {
-    console.error(`${MODULE} Login error:`, error);
+    console.error(`${MODULE} loginUser -> Login error:`, error);
     return res.status(500).json({
       success: false,
       statusCode: 500,
-      module: MODULE,
+      module: `${MODULE} loginUser`,
       message: "Internal server error",
     });
   }
@@ -214,7 +216,7 @@ const logoutUser = async (req, res) => {
       return res.status(400).json({
         success: false,
         statusCode: 400,
-        module: MODULE,
+        module: `${MODULE} logoutUser`,
         message: "User not found or not authenticated",
       });
     }
@@ -236,7 +238,7 @@ const logoutUser = async (req, res) => {
       .json({
         success: true,
         statusCode: 200,
-        module: MODULE,
+        module: `${MODULE} logoutUser`,
         message: "Logout successfull",
       });
   } catch (error) {
@@ -245,11 +247,89 @@ const logoutUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       statusCode: 500,
-      module: MODULE,
+      module: `${MODULE} logoutUser`,
       message: "Something went wrong during logout",
       error: error.message,
     });
   }
 };
 
-export { registerUser, loginUser, logoutUser };
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword || newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        statusCode: 400,
+        module: `${MODULE} changePassword`,
+        message: "Invalid input: password must be at least 8 characters long.",
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        statusCode: 404,
+        module: `${MODULE} changePassword`,
+        message: "User not found",
+      });
+    }
+
+    const isValidPassword = await verifyPassword(
+      currentPassword,
+      user.password,
+      user.salt
+    );
+
+    if (!isValidPassword) {
+      return res.status(401).json({
+        success: false,
+        statusCode: 401,
+        module: `${MODULE} changePassword`,
+        message: "Invalid current password",
+      });
+    }
+
+    const samePassword = await verifyPassword(
+      newPassword,
+      user.password,
+      user.salt
+    );
+    if (samePassword) {
+      return res.status(400).json({
+        success: false,
+        statusCode: 400,
+        module: `${MODULE} changePassword`,
+        message: "New password cannot be the same as the current one.",
+      });
+    }
+
+    const { salt, hash } = await hashPassword(newPassword);
+
+    const result = await User.updateOne(
+      { _id: req.user._id },
+      { password: hash, salt }
+    );
+
+    return res.status(200).json({
+      success: true,
+      statusCode: 200,
+      module: `${MODULE} changePassword`,
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    console.error("Error while changing password:", error);
+
+    return res.status(500).json({
+      success: false,
+      statusCode: 500,
+      module: `${MODULE} changePassword`,
+      message: "Something went wrong while changing password",
+    });
+  }
+};
+
+export { registerUser, loginUser, logoutUser, changePassword };

@@ -4,6 +4,7 @@ import {
   registerUser,
   loginUser,
   logoutUser,
+  changePassword
 } from "../controllers/user.controller.js";
 import { verifyUser } from "../middlewares/auth.middleware.js";
 import { refreshAccessToken } from "../controllers/auth.controller.js";
@@ -15,6 +16,7 @@ router.post("/register", upload.none(), registerUser);
 router.post("/login", upload.none(), loginUser);
 router.post("/logout", verifyUser, logoutUser);
 router.post("/refresh", refreshAccessToken);
+router.post("/changePassword", upload.none(), verifyUser,changePassword)
 
 //temproary route for jwt  user verification testing
 router.get("/profile", verifyUser, (req, res) => {
