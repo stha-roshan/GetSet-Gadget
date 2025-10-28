@@ -25,7 +25,7 @@ const refreshTokenCookieOption = {
 };
 
 const registerUser = async (req, res) => {
-  const validationErrors = [];
+  let validationErrors = [];
 
   try {
     const { name, email, phoneNumber, password } = req.body;
