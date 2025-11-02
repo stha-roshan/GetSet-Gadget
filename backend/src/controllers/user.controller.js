@@ -91,25 +91,6 @@ const registerUser = asyncHandler(async (req, res) => {
     user: createdUser,
   });
 });
-// const registerUser = async (req, res) => {
-
-//   try {
-
-//   } catch (error) {
-//     console.error(
-//       `${MODULE} registerUser -> Registration failed: ${error.message}`
-//     );
-//     if (process.env.NODE_ENV === "development") console.error(error.stack);
-
-//     return res.status(500).json({
-//       success: false,
-//       statusCode: 500,
-//       module: `${MODULE} registerUser`,
-//       message:
-//         "A server error occurred during registration. Please try again later.",
-//     });
-//   }
-// };
 
 const loginUser = async (req, res) => {
   const validationErrors = [];
