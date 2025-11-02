@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import { hashPassword, verifyPassword } from "../utils/hash.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { ApiError } from "../utils/ApiError.js"
+import { ApiError } from "../utils/ApiError.js";
 
 const MODULE = "[USER-REGISTRATION] [user.controller.js]";
 
@@ -51,13 +51,18 @@ const registerUser = asyncHandler(async (req, res) => {
     );
 
   if (validationErrors.length > 0) {
-    throw new ApiError(400, "Incalid fields provided", MODULE, validationErrors)
+    throw new ApiError(
+      400,
+      "Incalid fields provided",
+      MODULE,
+      validationErrors
+    );
   }
 
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    throw new ApiError(409, "An accout with this email already exists", MODULE)
+    throw new ApiError(409, "An accout with this email already exists", MODULE);
   }
 
   const { salt, hash } = await hashPassword(password);
@@ -92,219 +97,153 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 });
 
-const loginUser = async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
   const validationErrors = [];
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    if (!emailRegex.test(email?.trim()))
-      validationErrors.push("Invalid email provided");
+  if (!emailRegex.test(email?.trim()))
+    validationErrors.push("Invalid email provided");
 
-    if (!password) {
-      validationErrors.push("Password must not be empty");
-    }
+  if (!password) {
+    validationErrors.push("Password must not be empty");
+  }
 
-    if (validationErrors.length > 0) {
-      return res.status(400).json({
-        success: false,
-        statusCode: 400,
-        module: `${MODULE} loginUser`,
-        message: "Validation failed",
-        errors: validationErrors,
-      });
-    }
+  if (validationErrors.length > 0) {
+    throw new ApiError(400, "Invalid credentials", MODULE);
+  }
 
-    const user = await User.findOne({ email });
+  const user = await User.findOne({ email });
 
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        statusCode: 401,
-        module: `${MODULE} loginUser`,
-        message: "Invalid email or password",
-      });
-    }
+  if (!user) {
+    throw new ApiError(401, "Invalid email or password", MODULE);
+  }
 
-    const isValid = await verifyPassword(password, user.password, user.salt);
+  const isValid = await verifyPassword(password, user.password, user.salt);
 
-    if (!isValid) {
-      return res.status(401).json({
-        success: false,
-        statusCode: 401,
-        module: `${MODULE} loginUser`,
-        message: "Invalid email or password",
-      });
-    }
+  if (!isValid) {
+    throw new ApiError(401, "Invalid email or password", MODULE);
+  }
 
-    const data = {
+  const data = {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+  };
+
+  const accessToken = generateAccessToken(data);
+  const refreshToken = generateRefreshToken(data);
+
+  const responseData = {
+    user: {
       id: user._id,
       name: user.name,
       email: user.email,
-    };
+    },
+  };
 
-    const accessToken = generateAccessToken(data);
-    const refreshToken = generateRefreshToken(data);
-
-    const responseData = {
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-    };
-
-    if (process.env.NODE_ENV === "development") {
-      responseData.accessToken = accessToken;
-      responseData.refreshToken = refreshToken;
-    }
-
-    user.refreshToken = refreshToken;
-    await user.save();
-
-    return res
-      .status(200)
-      .cookie("accessToken", accessToken, accessTokenCookieOption)
-      .cookie("refreshToken", refreshToken, refreshTokenCookieOption)
-      .json({
-        success: true,
-        statusCode: 200,
-        module: `${MODULE} loginUser`,
-        message: "Login successfull",
-        data: responseData,
-      });
-  } catch (error) {
-    console.error(`${MODULE} loginUser -> Login error:`, error);
-    return res.status(500).json({
-      success: false,
-      statusCode: 500,
-      module: `${MODULE} loginUser`,
-      message: "Internal server error",
-    });
+  if (process.env.NODE_ENV === "development") {
+    responseData.accessToken = accessToken;
+    responseData.refreshToken = refreshToken;
   }
-};
 
-const logoutUser = async (req, res) => {
-  try {
-    const id = req.user._id;
+  user.refreshToken = refreshToken;
+  await user.save();
 
-    if (!id) {
-      return res.status(400).json({
-        success: false,
-        statusCode: 400,
-        module: `${MODULE} logoutUser`,
-        message: "User not found or not authenticated",
-      });
-    }
-
-    await User.findByIdAndUpdate(
-      id,
-      {
-        $set: {
-          refreshToken: null,
-        },
-      },
-      { new: true }
-    );
-
-    return res
-      .status(200)
-      .clearCookie("accessToken", accessTokenCookieOption)
-      .clearCookie("refreshToken", refreshTokenCookieOption)
-      .json({
-        success: true,
-        statusCode: 200,
-        module: `${MODULE} logoutUser`,
-        message: "Logout successfull",
-      });
-  } catch (error) {
-    console.error("Logout Error:", error.message);
-
-    return res.status(500).json({
-      success: false,
-      statusCode: 500,
-      module: `${MODULE} logoutUser`,
-      message: "Something went wrong during logout",
-      error: error.message,
-    });
-  }
-};
-
-const changePassword = async (req, res) => {
-  try {
-    const { currentPassword, newPassword } = req.body;
-
-    if (!currentPassword || !newPassword || newPassword.length < 8) {
-      return res.status(400).json({
-        success: false,
-        statusCode: 400,
-        module: `${MODULE} changePassword`,
-        message: "Invalid input: password must be at least 8 characters long.",
-      });
-    }
-
-    const user = await User.findById(req.user._id);
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        statusCode: 404,
-        module: `${MODULE} changePassword`,
-        message: "User not found",
-      });
-    }
-
-    const isValidPassword = await verifyPassword(
-      currentPassword,
-      user.password,
-      user.salt
-    );
-
-    if (!isValidPassword) {
-      return res.status(401).json({
-        success: false,
-        statusCode: 401,
-        module: `${MODULE} changePassword`,
-        message: "Invalid current password",
-      });
-    }
-
-    const samePassword = await verifyPassword(
-      newPassword,
-      user.password,
-      user.salt
-    );
-    if (samePassword) {
-      return res.status(400).json({
-        success: false,
-        statusCode: 400,
-        module: `${MODULE} changePassword`,
-        message: "New password cannot be the same as the current one.",
-      });
-    }
-
-    const { salt, hash } = await hashPassword(newPassword);
-
-    const result = await User.updateOne(
-      { _id: req.user._id },
-      { password: hash, salt }
-    );
-
-    return res.status(200).json({
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, accessTokenCookieOption)
+    .cookie("refreshToken", refreshToken, refreshTokenCookieOption)
+    .json({
       success: true,
       statusCode: 200,
-      module: `${MODULE} changePassword`,
-      message: "Password changed successfully",
+      module: `${MODULE} loginUser`,
+      message: "Login successfull",
+      data: responseData,
     });
-  } catch (error) {
-    console.error("Error while changing password:", error);
+});
 
-    return res.status(500).json({
-      success: false,
-      statusCode: 500,
-      module: `${MODULE} changePassword`,
-      message: "Something went wrong while changing password",
-    });
+const logoutUser = asyncHandler(async (req, res) => {
+  const id = req.user._id;
+
+  if (!id) {
+    throw new ApiError(400, "User not found or not authenticated", MODULE);
   }
-};
+
+  await User.findByIdAndUpdate(
+    id,
+    {
+      $set: {
+        refreshToken: null,
+      },
+    },
+    { new: true }
+  );
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", accessTokenCookieOption)
+    .clearCookie("refreshToken", refreshTokenCookieOption)
+    .json({
+      success: true,
+      statusCode: 200,
+      module: `${MODULE} logoutUser`,
+      message: "Logout successfull",
+    });
+});
+
+const changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword || newPassword.length < 8) {
+    throw new ApiError(
+      400,
+      "Invalid input: password must be at least 8 characters long.",
+      MODULE
+    );
+  }
+
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found", MODULE);
+  }
+
+  const isValidPassword = await verifyPassword(
+    currentPassword,
+    user.password,
+    user.salt
+  );
+
+  if (!isValidPassword) {
+    throw new ApiError(401, "Invalid current password", MODULE);
+  }
+
+  const samePassword = await verifyPassword(
+    newPassword,
+    user.password,
+    user.salt
+  );
+  if (samePassword) {
+    throw new ApiError(
+      400,
+      "New password cannot be the same as the current one.",
+      MODULE
+    );
+  }
+
+  const { salt, hash } = await hashPassword(newPassword);
+
+  const result = await User.updateOne(
+    { _id: req.user._id },
+    { password: hash, salt }
+  );
+
+  return res.status(200).json({
+    success: true,
+    statusCode: 200,
+    module: `${MODULE} changePassword`,
+    message: "Password changed successfully",
+  });
+});
 
 export { registerUser, loginUser, logoutUser, changePassword };
