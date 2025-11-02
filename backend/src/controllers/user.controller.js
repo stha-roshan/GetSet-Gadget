@@ -1,6 +1,8 @@
 import { User } from "../models/user.model.js";
 import { hashPassword, verifyPassword } from "../utils/hash.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js"
 
 const MODULE = "[USER-REGISTRATION] [user.controller.js]";
 
@@ -24,98 +26,90 @@ const refreshTokenCookieOption = {
   sameSite: "strict",
 };
 
-const registerUser = async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   let validationErrors = [];
+  const { name, email, phoneNumber, password } = req.body;
 
-  try {
-    const { name, email, phoneNumber, password } = req.body;
-
-    if (!nameRegex.test(name?.trim()))
-      validationErrors.push(
-        "Name can only contain letters, spaces, apostrophes, and hyphens."
-      );
-
-    if (!emailRegex.test(email?.trim()))
-      validationErrors.push(
-        "Please enter a valid email address (e.g., user@example.com)."
-      );
-
-    if (!phoneNumberRegex.test(phoneNumber?.trim()))
-      validationErrors.push(
-        "Phone number must be 10 digits long and start with 97 or 98."
-      );
-
-    if (!password || password.length < 8)
-      validationErrors.push(
-        "Password must be at least 8 characters long for security reasons."
-      );
-
-    if (validationErrors.length > 0) {
-      return res.status(400).json({
-        success: false,
-        statusCode: 400,
-        module: `${MODULE} registerUser`,
-        message: "Validation failed",
-        errors: validationErrors,
-      });
-    }
-
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(409).json({
-        success: false,
-        statusCode: 409,
-        module: `${MODULE} registerUser`,
-        message: "An account with this email already exists.",
-      });
-    }
-
-    const { salt, hash } = await hashPassword(password);
-    const newUser = await User.create({
-      name,
-      email,
-      phoneNumber,
-      password: hash,
-      salt,
-    });
-
-    const createdUser = await User.findById(newUser._id).select(
-      "-password -salt"
+  if (!nameRegex.test(name?.trim()))
+    validationErrors.push(
+      "Name can only contain letters, spaces, apostrophes, and hyphens."
     );
 
-    if (!createdUser) {
-      return res.status(500).json({
-        success: false,
-        statusCode: 500,
-        module: `${MODULE} registerUser`,
-        message:
-          "Something went wrong while creating your account. Please try again later.",
-      });
-    }
-
-    return res.status(201).json({
-      success: true,
-      statusCode: 201,
-      module: `${MODULE} registerUser`,
-      message: "Account created successfully! You can now log in.",
-      user: createdUser,
-    });
-  } catch (error) {
-    console.error(
-      `${MODULE} registerUser -> Registration failed: ${error.message}`
+  if (!emailRegex.test(email?.trim()))
+    validationErrors.push(
+      "Please enter a valid email address (e.g., user@example.com)."
     );
-    if (process.env.NODE_ENV === "development") console.error(error.stack);
 
+  if (!phoneNumberRegex.test(phoneNumber?.trim()))
+    validationErrors.push(
+      "Phone number must be 10 digits long and start with 97 or 98."
+    );
+
+  if (!password || password.length < 8)
+    validationErrors.push(
+      "Password must be at least 8 characters long for security reasons."
+    );
+
+  if (validationErrors.length > 0) {
+    throw new ApiError(400, "Incalid fields provided", MODULE, validationErrors)
+  }
+
+  const existingUser = await User.findOne({ email });
+
+  if (existingUser) {
+    throw new ApiError(409, "An accout with this email already exists", MODULE)
+  }
+
+  const { salt, hash } = await hashPassword(password);
+  const newUser = await User.create({
+    name,
+    email,
+    phoneNumber,
+    password: hash,
+    salt,
+  });
+
+  const createdUser = await User.findById(newUser._id).select(
+    "-password -salt"
+  );
+
+  if (!createdUser) {
     return res.status(500).json({
       success: false,
       statusCode: 500,
       module: `${MODULE} registerUser`,
       message:
-        "A server error occurred during registration. Please try again later.",
+        "Something went wrong while creating your account. Please try again later.",
     });
   }
-};
+
+  return res.status(201).json({
+    success: true,
+    statusCode: 201,
+    module: `${MODULE} registerUser`,
+    message: "Account created successfully! You can now log in.",
+    user: createdUser,
+  });
+});
+// const registerUser = async (req, res) => {
+
+//   try {
+
+//   } catch (error) {
+//     console.error(
+//       `${MODULE} registerUser -> Registration failed: ${error.message}`
+//     );
+//     if (process.env.NODE_ENV === "development") console.error(error.stack);
+
+//     return res.status(500).json({
+//       success: false,
+//       statusCode: 500,
+//       module: `${MODULE} registerUser`,
+//       message:
+//         "A server error occurred during registration. Please try again later.",
+//     });
+//   }
+// };
 
 const loginUser = async (req, res) => {
   const validationErrors = [];
