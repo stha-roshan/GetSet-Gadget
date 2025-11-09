@@ -4,60 +4,73 @@ import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { accessTokenCookieOption, refreshTokenCookieOption } from "../utils/cookieOptions.js";
+import {
+  accessTokenCookieOption,
+  refreshTokenCookieOption,
+} from "../utils/cookieOptions.js";
+import {
+  isValidName,
+  isValidEmail,
+  isValidPhoneNumber,
+  isValidPassword,
+  validateFields,
+} from "../utils/generalValidators.js";
 
-const MODULE = "[USER-REGISTRATION] [user.controller.js]";
-
-const emailRegex = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const nameRegex = /^[A-Za-z\s'-]+$/;
-const phoneNumberRegex = /^(98|97)[0-9]{8}$/;
-
-
+const MODULE = "[USER] [user.controller.js]";
 
 const registerUser = asyncHandler(async (req, res) => {
-  let validationErrors = [];
   const { name, email, phoneNumber, password } = req.body;
 
-  if (!nameRegex.test(name?.trim()))
-    validationErrors.push(
-      "Name can only contain letters, spaces, apostrophes, and hyphens."
-    );
+  const validation = validateFields([
+    {
+      value: name,
+      field: "name",
+      validator: isValidName,
+      message:
+        "Name must be 2-50 characters and contain only letters, spaces, apostrophes, and hyphens",
+    },
+    {
+      value: email,
+      field: "email",
+      validator: isValidEmail,
+      message: "Please enter a valid email address (e.g., user@example.com)",
+    },
+    {
+      value: phoneNumber,
+      field: "phoneNumber",
+      validator: isValidPhoneNumber,
+      message: "Phone number must be 10 digits starting with 97 or 98",
+    },
+    {
+      value: password,
+      field: "password",
+      validator: isValidPassword,
+      message: "Password must be at least 8 characters long",
+    },
+  ]);
 
-  if (!emailRegex.test(email?.trim()))
-    validationErrors.push(
-      "Please enter a valid email address (e.g., user@example.com)."
-    );
-
-  if (!phoneNumberRegex.test(phoneNumber?.trim()))
-    validationErrors.push(
-      "Phone number must be 10 digits long and start with 97 or 98."
-    );
-
-  if (!password || password.length < 8)
-    validationErrors.push(
-      "Password must be at least 8 characters long for security reasons."
-    );
-
-  if (validationErrors.length > 0) {
-    throw new ApiError(
-      400,
-      "Incalid fields provided",
-      MODULE,
-      validationErrors
-    );
+  if (!validation.isValid) {
+    throw new ApiError(400, "Validation failed", MODULE, validation.errors);
   }
 
-  const existingUser = await User.findOne({ email });
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const existingUser = await User.findOne({ email: normalizedEmail });
 
   if (existingUser) {
-    throw new ApiError(409, "An accout with this email already exists", MODULE);
+    throw new ApiError(
+      409,
+      "An account with this email already exists",
+      MODULE
+    );
   }
 
   const { salt, hash } = await hashPassword(password);
+
   const newUser = await User.create({
-    name,
-    email,
-    phoneNumber,
+    name: name.trim(),
+    email: normalizedEmail,
+    phoneNumber: phoneNumber.trim(),
     password: hash,
     salt,
   });
@@ -87,21 +100,28 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  const validationErrors = [];
   const { email, password } = req.body;
 
-  if (!emailRegex.test(email?.trim()))
-    validationErrors.push("Invalid email provided");
+  const validation = validateFields([
+    {
+      value: email,
+      field: "email",
+      validator: isValidEmail,
+      message: "Please enter a valid email address",
+    },
+    {
+      value: password,
+      field: "password",
+      validator: (val) => val && val.length > 0,
+      message: "Password is required",
+    },
+  ]);
 
-  if (!password) {
-    validationErrors.push("Password must not be empty");
+  if (!validation.isValid) {
+    throw new ApiError(400, "Invalid credentials", MODULE, validation.errors);
   }
 
-  if (validationErrors.length > 0) {
-    throw new ApiError(400, "Invalid credentials", MODULE, validationErrors);
-  }
-
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: email.trim().toLowerCase() });
 
   if (!user) {
     throw new ApiError(401, "Invalid email or password", MODULE);
@@ -113,14 +133,17 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid email or password", MODULE);
   }
 
-  const data = {
+  const tokenData = {
     id: user._id,
     name: user.name,
     email: user.email,
   };
 
-  const accessToken = generateAccessToken(data);
-  const refreshToken = generateRefreshToken(data);
+  const accessToken = generateAccessToken(tokenData);
+  const refreshToken = generateRefreshToken(tokenData);
+
+  user.refreshToken = refreshToken;
+  await user.save();
 
   const responseData = {
     user: {
@@ -135,30 +158,17 @@ const loginUser = asyncHandler(async (req, res) => {
     responseData.refreshToken = refreshToken;
   }
 
-  user.refreshToken = refreshToken;
-  await user.save();
-
   return res
     .status(200)
     .cookie("accessToken", accessToken, accessTokenCookieOption)
     .cookie("refreshToken", refreshToken, refreshTokenCookieOption)
-    .json(new ApiResponse(200, "login successfull", responseData, MODULE));
+    .json(new ApiResponse(200, "Login successful", responseData, MODULE));
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  const id = req.user._id;
-
-  if (!id) {
-    throw new ApiError(400, "User not found or not authenticated", MODULE);
-  }
-
   await User.findByIdAndUpdate(
-    id,
-    {
-      $set: {
-        refreshToken: null,
-      },
-    },
+    req.user._id,
+    { $set: { refreshToken: null } },
     { new: true }
   );
 
@@ -166,18 +176,29 @@ const logoutUser = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", accessTokenCookieOption)
     .clearCookie("refreshToken", refreshTokenCookieOption)
-    .json(new ApiResponse(200, "Logout successfull", null, MODULE));
+    .json(new ApiResponse(200, "Logout successful", null, MODULE));
 });
 
 const changePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
-  if (!currentPassword || !newPassword || newPassword.length < 8) {
-    throw new ApiError(
-      400,
-      "Invalid input: password must be at least 8 characters long.",
-      MODULE
-    );
+  const validation = validateFields([
+    {
+      value: currentPassword,
+      field: "currentPassword",
+      validator: (val) => val && val.length > 0,
+      message: "Current password is required",
+    },
+    {
+      value: newPassword,
+      field: "newPassword",
+      validator: isValidPassword,
+      message: "New password must be at least 8 characters long",
+    },
+  ]);
+
+  if (!validation.isValid) {
+    throw new ApiError(400, "Validation failed", MODULE, validation.errors);
   }
 
   const user = await User.findById(req.user._id);
@@ -201,10 +222,11 @@ const changePassword = asyncHandler(async (req, res) => {
     user.password,
     user.salt
   );
+
   if (samePassword) {
     throw new ApiError(
       400,
-      "New password cannot be the same as the current one.",
+      "New password cannot be the same as the current password",
       MODULE
     );
   }
