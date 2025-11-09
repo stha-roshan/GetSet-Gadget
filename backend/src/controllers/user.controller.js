@@ -3,6 +3,8 @@ import { hashPassword, verifyPassword } from "../utils/hash.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { accessTokenCookieOption, refreshTokenCookieOption } from "../utils/cookieOptions.js";
 
 const MODULE = "[USER-REGISTRATION] [user.controller.js]";
 
@@ -10,21 +12,7 @@ const emailRegex = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const nameRegex = /^[A-Za-z\s'-]+$/;
 const phoneNumberRegex = /^(98|97)[0-9]{8}$/;
 
-const accessTokenCookieOption = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV !== "development",
-  maxAge: 60 * 60 * 1000,
-  path: "/",
-  sameSite: "strict",
-};
 
-const refreshTokenCookieOption = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV !== "development",
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-  path: "/api/users/refresh",
-  sameSite: "strict",
-};
 
 const registerUser = asyncHandler(async (req, res) => {
   let validationErrors = [];
@@ -79,22 +67,23 @@ const registerUser = asyncHandler(async (req, res) => {
   );
 
   if (!createdUser) {
-    return res.status(500).json({
-      success: false,
-      statusCode: 500,
-      module: `${MODULE} registerUser`,
-      message:
-        "Something went wrong while creating your account. Please try again later.",
-    });
+    throw new ApiError(
+      500,
+      "Something went wrong while creating your account. Please try again later.",
+      MODULE
+    );
   }
 
-  return res.status(201).json({
-    success: true,
-    statusCode: 201,
-    module: `${MODULE} registerUser`,
-    message: "Account created successfully! You can now log in.",
-    user: createdUser,
-  });
+  return res
+    .status(201)
+    .json(
+      new ApiResponse(
+        201,
+        "Account created successfully! You can now login",
+        createdUser,
+        MODULE
+      )
+    );
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -109,7 +98,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   if (validationErrors.length > 0) {
-    throw new ApiError(400, "Invalid credentials", MODULE);
+    throw new ApiError(400, "Invalid credentials", MODULE, validationErrors);
   }
 
   const user = await User.findOne({ email });
@@ -153,13 +142,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .status(200)
     .cookie("accessToken", accessToken, accessTokenCookieOption)
     .cookie("refreshToken", refreshToken, refreshTokenCookieOption)
-    .json({
-      success: true,
-      statusCode: 200,
-      module: `${MODULE} loginUser`,
-      message: "Login successfull",
-      data: responseData,
-    });
+    .json(new ApiResponse(200, "login successfull", responseData, MODULE));
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -183,12 +166,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", accessTokenCookieOption)
     .clearCookie("refreshToken", refreshTokenCookieOption)
-    .json({
-      success: true,
-      statusCode: 200,
-      module: `${MODULE} logoutUser`,
-      message: "Logout successfull",
-    });
+    .json(new ApiResponse(200, "Logout successfull", null, MODULE));
 });
 
 const changePassword = asyncHandler(async (req, res) => {
@@ -233,17 +211,11 @@ const changePassword = asyncHandler(async (req, res) => {
 
   const { salt, hash } = await hashPassword(newPassword);
 
-  const result = await User.updateOne(
-    { _id: req.user._id },
-    { password: hash, salt }
-  );
+  await User.updateOne({ _id: req.user._id }, { password: hash, salt });
 
-  return res.status(200).json({
-    success: true,
-    statusCode: 200,
-    module: `${MODULE} changePassword`,
-    message: "Password changed successfully",
-  });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Password changed successfully", null, MODULE));
 });
 
 export { registerUser, loginUser, logoutUser, changePassword };
