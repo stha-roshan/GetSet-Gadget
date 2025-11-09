@@ -1,74 +1,55 @@
 import { Category } from "../models/category.model.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { isValidName } from "../utils/generalValidators.js";
+import { isValidDescription } from "../utils/categoryValidator.js";
+import { validateFields } from "../utils/validatorFunctions.js";
 
 const MODULE = "[CATEGORY] [category.controller.js]";
-const nameRegex = /^[A-Za-z\s'-]+$/;
+const createCategory = asyncHandler(async (req, res) => {
+  const { name, description } = req.body;
 
-const createCategory = async (req, res) => {
-  let validationErrors = [];
-  try {
-    const { name, description } = req.body;
+  const validation = validateFields([
+    {
+      value: name,
+      field: "name",
+      validator: isValidName,
+      message:
+        "Category name must be 2-50 characters and contain only letters, spaces, apostrophes, and hyphens",
+    },
 
-    if (!name || !description) {
-      return res.status(400).json({
-        success: false,
-        statusCode: 400,
-        module: `${MODULE} createCategory`,
-        message: "Name and description are required",
-      });
-    }
+    {
+      value: description,
+      field: "description",
+      validator: isValidDescription,
+      message:
+        "Description must be 10-500 characters long and contain only letters, numbers, spaces, and common punctuation (e.g., . , ! @ # % & ( ) ' \" : ; / -).",
+    },
+  ]);
 
-    if (name.trim().length < 2) {
-      validationErrors.push("Category name must be at least 2 characters long");
-    }
-    if (!nameRegex.test(name.trim())) {
-      validationErrors.push(
-        "Category name can only contain letters, spaces, hyphens and apostrophes"
-      );
-    }
-
-    if (description.trim().length < 2) {
-      validationErrors.push("Description must be at least 2 characters long");
-    }
-
-    if (validationErrors.length > 0) {
-      return res.status(400).json({
-        success: false,
-        statusCode: 400,
-        module: `${MODULE} createCategory`,
-        message: "Validation failed",
-        errors: validationErrors,
-      });
-    }
-
-    const newCategory = await Category.create({
-      name: name.trim(),
-      description: description.trim(),
-    });
-
-    if (!newCategory) {
-      return res.status(500).json({
-        success: false,
-        statusCode: 500,
-        module: `${MODULE} createCategory`,
-        message:
-          "Something went wrong while creating category. Please try again later.",
-      });
-    }
-
-    return res.status(201).json({
-      success: true,
-      statusCode: 201,
-      module: `${MODULE} createCategory`,
-      message: "Category created successfully!",
-      category: newCategory,
-    });
-  } catch (error) {
-    console.error(`${MODULE} Error:`, error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to create Category. Please try again.",
-    });
+  if (!validation.isValid) {
+    throw new ApiError(400, "Validation failed", MODULE, validation.errors);
   }
-};
+
+  const newCategory = await Category.create({
+    name: name.trim(),
+    description: description.trim(),
+  });
+
+  if (!newCategory) {
+    throw new ApiError(
+      500,
+      "Something went wrong while creating category. Please try again later.",
+      MODULE
+    );
+  }
+
+  return res
+    .status(201)
+    .json(
+      new ApiResponse(201, "Category created successfully", newCategory, MODULE)
+    );
+});
 
 export { createCategory };

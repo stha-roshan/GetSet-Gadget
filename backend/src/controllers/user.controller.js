@@ -13,8 +13,8 @@ import {
   isValidEmail,
   isValidPhoneNumber,
   isValidPassword,
-  validateFields,
 } from "../utils/generalValidators.js";
+import { validateFields } from "../utils/validatorFunctions.js";
 
 const MODULE = "[USER] [user.controller.js]";
 
