@@ -1,11 +1,57 @@
-const nameRegex = /^[A-Za-z\s'-]+$/;
-const phoneNumberRegex = /^(98|97)[0-9]{8}$/;
-const addressLineRegex = /^[a-zA-Z0-9\s,.\-#/]+$/;
-const landmarkRegex = /^[a-zA-Z0-9\s,.\-()]+$/;
-const city_state_countryRegex = /^[a-zA-Z\s.\-]+$/;
-const postalCodeRegex = /^[a-zA-Z0-9\s\-]{3,10}$/;
+import { isValidName, isValidPhoneNumber } from "./generalValidators.js";
 
-export const validateAddressFields = (fields) => {
+export const REGEX = {
+  addressLine: /^[a-zA-Z0-9\s,.\-#/]+$/,
+  landmark: /^[a-zA-Z0-9\s,.\-()]+$/,
+  cityStateCountry: /^[a-zA-Z\s.\-]+$/,
+  postalCode: /^[a-zA-Z0-9\s\-]{3,10}$/,
+};
+
+export const isValidAddressLine = (addressLine) => {
+  if (!addressLine || typeof addressLine !== "string") return false;
+
+  const trimmed = addressLine.trim();
+  if (trimmed.length < 5 || trimmed.length > 100) return false;
+
+  return REGEX.addressLine.test(trimmed);
+};
+
+export const isValidLandmark = (landmark) => {
+  if (!landmark || landmark.trim() === "") return true;
+
+  if (typeof landmark !== "string") return false;
+
+  const trimmed = landmark.trim();
+
+  if (trimmed.length > 100) return false;
+
+  return REGEX.landmark.test(trimmed);
+};
+
+export const isValidCityStateCountry = (value) => {
+  if (!value || typeof value !== "string") return false;
+
+  const trimmed = value.trim();
+
+  if (trimmed.length < 2 || trimmed.length > 50) return false;
+
+  return REGEX.cityStateCountry.test(trimmed);
+};
+
+export const isValidPostalCode = (postalCode) => {
+  if (!postalCode || typeof postalCode !== "string") return false;
+
+  const trimmed = postalCode.trim();
+
+  return REGEX.postalCode.test(trimmed);
+};
+
+export const isValidLabel = (label) => {
+  const validLabels = ["Home", "Office", "Other"];
+  return validLabels.includes(label);
+};
+
+export const buildAddressValidations = (data) => {
   const {
     recipientName,
     phoneNumber,
@@ -16,178 +62,76 @@ export const validateAddressFields = (fields) => {
     state,
     postalCode,
     country,
-  } = fields;
+  } = data;
 
-  if (
-    !recipientName ||
-    !phoneNumber ||
-    !addressLine ||
-    !city ||
-    !state ||
-    !postalCode
-  ) {
-    return {
-      isValid: false,
-      message: "Missing required fields",
-      errors: {
-        recipientName: !recipientName
-          ? "Recipient name is required"
-          : undefined,
-        phoneNumber: !phoneNumber ? "Phone number is required" : undefined,
-        addressLine: !addressLine ? "Address line is required" : undefined,
-        city: !city ? "City is required" : undefined,
-        state: !state ? "State is required" : undefined,
-        postalCode: !postalCode ? "Postal code is required" : undefined,
-      },
-    };
-  }
-
-  // Recipient Name validations
-  if (recipientName.trim().length < 2) {
-    return {
-      isValid: false,
-      message: "Recipient name must be at least 2 characters long",
-    };
-  }
-  if (recipientName.trim().length > 50) {
-    return {
-      isValid: false,
-      message: "Recipient name cannot exceed 50 characters",
-    };
-  }
-  if (!nameRegex.test(recipientName.trim())) {
-    return {
-      isValid: false,
+  const validations = [
+    {
+      value: recipientName,
+      field: "recipientName",
+      validator: isValidName,
       message:
-        "Recipient name can only contain letters, spaces, hyphens and apostrophes",
-    };
-  }
-
-  // Phone Number validation
-  if (!phoneNumberRegex.test(phoneNumber.trim())) {
-    return {
-      isValid: false,
+        "Recipient name must be 2-50 characters and contain only letters, spaces, apostrophes, and hyphens",
+    },
+    {
+      value: phoneNumber,
+      field: "phoneNumber",
+      validator: isValidPhoneNumber,
+      message: "Phone number must be 10 digits starting with 97 or 98",
+    },
+    {
+      value: addressLine,
+      field: "addressLine",
+      validator: isValidAddressLine,
       message:
-        "Phone number must be 10 digits starting with 98 or 97 (e.g., 9812345678)",
-    };
-  }
+        "Address line must be 5-100 characters and contain only letters, numbers, spaces, and common characters (. , - # /)",
+    },
+    {
+      value: city,
+      field: "city",
+      validator: isValidCityStateCountry,
+      message:
+        "City must be 2-50 characters and contain only letters, spaces, dots, and hyphens",
+    },
+    {
+      value: state,
+      field: "state",
+      validator: isValidCityStateCountry,
+      message:
+        "State must be 2-50 characters and contain only letters, spaces, dots, and hyphens",
+    },
+    {
+      value: postalCode,
+      field: "postalCode",
+      validator: isValidPostalCode,
+      message: "Postal code must be 3-10 characters",
+    },
+    {
+      value: country,
+      field: "country",
+      validator: isValidCityStateCountry,
+      message:
+        "Country must be 2-50 characters and contain only letters, spaces, dots, and hyphens",
+    },
+  ];
 
-  // Label validation
-  if (label && !["Home", "Office", "Other"].includes(label)) {
-    return {
-      isValid: false,
+  if (label) {
+    validations.push({
+      value: label,
+      field: "label",
+      validator: isValidLabel,
       message: "Label must be either 'Home', 'Office', or 'Other'",
-    };
+    });
   }
 
-  // Address Line validations
-  if (addressLine.trim().length < 5) {
-    return {
-      isValid: false,
-      message: "Address line must be at least 5 characters long",
-    };
-  }
-  if (addressLine.trim().length > 100) {
-    return {
-      isValid: false,
-      message: "Address line cannot exceed 100 characters",
-    };
-  }
-  if (!addressLineRegex.test(addressLine.trim())) {
-    return {
-      isValid: false,
-      message: "Address line contains invalid characters",
-    };
-  }
-
-  // Landmark validation (optional)
   if (landmark) {
-    if (landmark.trim().length > 100) {
-      return {
-        isValid: false,
-        message: "Landmark cannot exceed 100 characters",
-      };
-    }
-    if (!landmarkRegex.test(landmark.trim())) {
-      return {
-        isValid: false,
-        message: "Landmark contains invalid characters",
-      };
-    }
+    validations.push({
+      value: landmark,
+      field: "landmark",
+      validator: isValidLandmark,
+      message:
+        "Landmark must be 1-100 characters and contain only letters, numbers, spaces, and common punctuation",
+    });
   }
 
-  // City validations
-  if (city.trim().length < 2) {
-    return {
-      isValid: false,
-      message: "City must be at least 2 characters long",
-    };
-  }
-  if (city.trim().length > 50) {
-    return {
-      isValid: false,
-      message: "City cannot exceed 50 characters",
-    };
-  }
-  if (!city_state_countryRegex.test(city.trim())) {
-    return {
-      isValid: false,
-      message: "City name can only contain letters, spaces, dots and hyphens",
-    };
-  }
-
-  // State validations
-  if (state.trim().length < 2) {
-    return {
-      isValid: false,
-      message: "State must be at least 2 characters long",
-    };
-  }
-  if (state.trim().length > 50) {
-    return {
-      isValid: false,
-      message: "State cannot exceed 50 characters",
-    };
-  }
-  if (!city_state_countryRegex.test(state.trim())) {
-    return {
-      isValid: false,
-      message: "State can only contain letters, spaces, dots and hyphens",
-    };
-  }
-
-  // Postal Code validation
-  if (!postalCodeRegex.test(postalCode.trim())) {
-    return {
-      isValid: false,
-      message: "Please enter a valid postal code (e.g., 44200)",
-    };
-  }
-
-  // Country validation (optional)
-  if (country) {
-    if (country.trim().length < 2) {
-      return {
-        isValid: false,
-        message: "Country must be at least 2 characters long",
-      };
-    }
-    if (country.trim().length > 50) {
-      return {
-        isValid: false,
-        message: "Country cannot exceed 50 characters",
-      };
-    }
-    if (!city_state_countryRegex.test(country.trim())) {
-      return {
-        isValid: false,
-        message: "Country can only contain letters, spaces, dots and hyphens",
-      };
-    }
-  }
-
-  // All validations passed
-  return {
-    isValid: true,
-  };
+  return validations;
 };
