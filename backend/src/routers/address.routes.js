@@ -11,7 +11,7 @@ const router = Router();
 const upload = multer();
 
 router.post("/create", verifyUser, upload.none(), createAddress);
-router.patch("/:addressId", verifyUser, upload.none(), editAddress);
+router.patch("/edit/:addressId", verifyUser, upload.none(), editAddress);
 router.delete("/:addressId", verifyUser, deleteAddress);
 
 export default router;
