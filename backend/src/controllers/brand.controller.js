@@ -5,14 +5,19 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import {
   isValidName,
   isValidDescription,
-  isValidImage,
 } from "../utils/brandValidator.js";
 import { validateFields } from "../utils/validatorFunctions.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const MODULE = "[BRAND] [brand.controller.js]";
 
 const createBrand = asyncHandler(async (req, res) => {
-  const { name, description, image } = req.body;
+  if (!req.file) {
+    throw new ApiError(400, "Image is required", MODULE);
+  }
+
+  const { name, description } = req.body;
+  const image = req.file.path;
 
   const validation = validateFields([
     {
@@ -31,12 +36,6 @@ const createBrand = asyncHandler(async (req, res) => {
         "Description must be 10-500 characters long and contain only letters, numbers, spaces, and common punctuation (e.g., . , ! @ # % & ( ) ' \" : ; / -).",
     },
 
-    {
-      value: image,
-      field: "image",
-      validator: isValidImage,
-      message: "Invalid image format",
-    },
   ]);
 
   if (!validation.isValid) {
@@ -48,10 +47,18 @@ const createBrand = asyncHandler(async (req, res) => {
     throw new ApiError(409, "Brand with this name already exists", MODULE);
   }
 
+  const signedImage = await uploadOnCloudinary(image);
+  console.log(image)
+  if (!signedImage) {
+    throw new ApiError(500, "Brand image upload failed", MODULE);
+  }
+
+  const signedImageUrl = signedImage.secure_url;
+
   const newBrand = await Brand.create({
     name: name.trim(),
     description: description.trim(),
-    image,
+    image: signedImageUrl,
   });
 
   if (!newBrand) {

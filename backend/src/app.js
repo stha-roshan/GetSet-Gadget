@@ -11,12 +11,14 @@ import userRoutes from "./routers/user.routes.js";
 import addressRoutes from "./routers/address.routes.js";
 import categoryRoutes from "./routers/category.routes.js";
 import productRoutes from "./routers/product.routes.js";
+import brandRoutes from "./routers/brand.routes.js";
 
 // ########## implement routes ##########
 
 app.use("/api/users", userRoutes);
 app.use("/api/address", addressRoutes);
 app.use("/api/category", categoryRoutes);
-app.use("/api/product", productRoutes)
+app.use("/api/product", productRoutes);
+app.use("/api/brand", brandRoutes);
 
 export { app };
