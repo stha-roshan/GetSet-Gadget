@@ -48,7 +48,6 @@ const createBrand = asyncHandler(async (req, res) => {
   }
 
   const signedImage = await uploadOnCloudinary(image);
-  console.log(image)
   if (!signedImage) {
     throw new ApiError(500, "Brand image upload failed", MODULE);
   }

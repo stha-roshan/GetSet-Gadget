@@ -23,9 +23,9 @@ const productSchema = new Schema(
     },
 
     brand: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
       required: true,
-      trim: true,
     },
 
     price: {

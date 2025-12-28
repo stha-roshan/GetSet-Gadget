@@ -1,7 +1,6 @@
 export const REGEX = {
   name: /^[A-Za-z0-9\s'’"(),.-]{2,100}$/,
   description: /^[A-Za-z0-9\s.,'"!?:;()%&/\-+]{10,500}$/,
-  brand: /^[A-Za-z0-9\s&'.\-]{2,50}$/,
 };
 
 export const isValidProductName = (name) => {
@@ -16,7 +15,7 @@ export const isValidDescription = (description) => {
 
 export const isValidBrand = (brand) => {
   if (!brand || typeof brand !== "string") return false;
-  return REGEX.brand.test(brand.trim());
+  return true;
 };
 
 export const isValidPrice = (price) => {
@@ -111,12 +110,6 @@ export const buildProductValidation = (data) => {
       message: "Invalid stock",
     },
 
-    {
-      value: image,
-      field: "image",
-      validator: isValidImage,
-      message: "Invalid image format",
-    },
   ];
 
   if (totalSales) {

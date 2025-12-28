@@ -5,6 +5,6 @@ import { createCategory } from "../controllers/category.controller.js";
 const router = Router();
 const upload = multer();
 
-router.post("/create", upload.none(), createCategory);
+router.post("/create-category", upload.none(), createCategory);
 
 export default router;
