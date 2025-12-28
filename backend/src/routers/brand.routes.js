@@ -1,6 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
-import { createBrand } from "../controllers/brand.controller.js";
+import { createBrand, brandList } from "../controllers/brand.controller.js";
 import path from "path";
 
 const router = Router();
@@ -43,5 +43,7 @@ const upload = multer({
 });
 
 router.post("/create-brand", upload.single("image"), createBrand);
+
+router.get("/brand-list", brandList)
 
 export default router;

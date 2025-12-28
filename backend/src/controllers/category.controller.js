@@ -52,4 +52,15 @@ const createCategory = asyncHandler(async (req, res) => {
     );
 });
 
-export { createCategory };
+const categoryList = asyncHandler(async (req, res) => {
+  const categories = await Category.find({}).select("name _id");
+  if (!categories) {
+    throw new ApiError(500, "Failed to fetch Categories", MODULE);
+  }
+
+  return res.json(
+    new ApiResponse(200, "All Categories fetched successfully", categories)
+  );
+});
+
+export { createCategory, categoryList };

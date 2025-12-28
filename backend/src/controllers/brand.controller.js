@@ -2,10 +2,7 @@ import { Brand } from "../models/brand.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import {
-  isValidName,
-  isValidDescription,
-} from "../utils/brandValidator.js";
+import { isValidName, isValidDescription } from "../utils/brandValidator.js";
 import { validateFields } from "../utils/validatorFunctions.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
@@ -35,7 +32,6 @@ const createBrand = asyncHandler(async (req, res) => {
       message:
         "Description must be 10-500 characters long and contain only letters, numbers, spaces, and common punctuation (e.g., . , ! @ # % & ( ) ' \" : ; / -).",
     },
-
   ]);
 
   if (!validation.isValid) {
@@ -73,4 +69,15 @@ const createBrand = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, "Brand created successfully", newBrand));
 });
 
-export { createBrand };
+const brandList = asyncHandler(async (req, res) => {
+  const brands = await Brand.find({}).select("name _id");
+
+  if (!brands) {
+    throw new ApiError(500, "Failed to fetch brands", MODULE);
+  }
+
+  return res.json(
+    new ApiResponse(200, "All Brand fetched successfully", brands)
+  );
+});
+export { createBrand, brandList };
