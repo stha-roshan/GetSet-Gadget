@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add New Product</title>
+    <link rel="stylesheet" href="../styles/product_form.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-header">
+        <h1>Add New Product</h1>
+        <p>Fill in the product details below</p>
+      </div>
+
+      <form id="productForm">
+        <div class="form-content">
+          <!-- Basic Information -->
+          <div class="form-group">
+            <label>Product Name <span class="required">*</span></label>
+            <input
+              type="text"
+              id="productName"
+              placeholder="e.g., Wireless Bluetooth Headphones"
+              maxlength="100"
+              required
+            />
+            <div class="char-counter">
+              <span>Enter product name</span>
+              <span class="char-remaining"
+                ><span id="nameCount">0</span>/100</span
+              >
+            </div>
+            <div class="input-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label>Description <span class="required">*</span></label>
+            <textarea
+              id="productDescription"
+              placeholder="Describe your product in detail..."
+              maxlength="1000"
+              required
+            ></textarea>
+            <div class="char-counter">
+              <span>Provide detailed description (10-1000 characters)</span>
+              <span class="char-remaining"
+                ><span id="descCount">0</span>/1000</span
+              >
+            </div>
+            <div class="input-feedback"></div>
+          </div>
+
+          <!-- Categorization -->
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category <span class="required">*</span></label>
+              <select id="productCategory" required disabled>
+                <option value="">Loading categories...</option>
+              </select>
+              <div class="input-feedback" id="categoryFeedback"></div>
+            </div>
+
+            <div class="form-group">
+              <label>Brand <span class="required">*</span></label>
+              <select id="productBrand" required disabled>
+                <option value="">Loading brands...</option>
+              </select>
+              <div class="input-feedback" id="brandFeedback"></div>
+            </div>
+          </div>
+
+          <div class="help-text">
+            ℹ️ Select the appropriate category and brand for better product
+            organization and customer search.
+          </div>
+
+          <!-- Pricing & Stock -->
+          <div class="form-row">
+            <div class="form-group">
+              <label>Price <span class="required">*</span></label>
+              <div style="position: relative">
+                <span
+                  style="
+                    position: absolute;
+                    left: 12px;
+                    top: 12px;
+                    color: #999;
+                    font-weight: 600;
+                  "
+                  >₹</span
+                >
+                <input
+                  type="number"
+                  id="productPrice"
+                  placeholder="0.00"
+                  min="1"
+                  step="1"
+                  style="padding-left: 32px"
+                  required
+                />
+              </div>
+              <div class="help-text">Minimum price: ₹1</div>
+              <div class="input-feedback"></div>
+            </div>
+
+            <div class="form-group">
+              <label>Stock Quantity <span class="required">*</span></label>
+              <input
+                type="number"
+                id="productStock"
+                placeholder="0"
+                min="0"
+                required
+              />
+              <div class="help-text" id="stockWarning"></div>
+              <div class="input-feedback"></div>
+            </div>
+          </div>
+
+          <!-- Image Upload -->
+          <div class="form-group">
+            <label>Product Image <span class="required">*</span></label>
+            <div class="image-upload-area" id="imageUploadArea">
+              <div class="image-upload-icon">📸</div>
+              <div class="image-upload-text">Click to browse</div>
+              <input type="file" id="imageInput" accept="image/*" />
+            </div>
+            <div class="image-preview-container" id="previewContainer"></div>
+            <div class="input-feedback" id="imageFeedback"></div>
+          </div>
+
+          <!-- Total Sales -->
+          <div class="form-group">
+            <label>Total Sales (Optional)</label>
+            <input
+              type="number"
+              id="productTotalSales"
+              placeholder="0"
+              min="0"
+              value="0"
+            />
+            <div class="help-text">
+              For imported products or historical data
+            </div>
+            <div class="input-feedback"></div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary" onclick="resetForm()">
+            Clear
+          </button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            + Create Product
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script src="../scripts/product_form.js"></script>
+  </body>
+</html>

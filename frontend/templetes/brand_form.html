@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add New Brand</title>
+    <link rel="stylesheet" href="../styles/brand_form.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-header">
+        <h1>Add New Brand</h1>
+        <p>Fill in the brand details below</p>
+      </div>
+
+      <form id="categoryForm">
+        <div class="form-content">
+          <div class="form-group">
+            <label for="categoryName">
+              Brand Name <span class="required">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="categoryName"
+              name="categoryName"
+              placeholder="e.g., Nike, Apple, Samsung"
+              maxlength="50"
+              autocomplete="off"
+            />
+
+            <div class="char-counter">
+              <span>Enter brand name</span>
+              <span class="char-remaining"
+                ><span id="nameCount">0</span>/50</span
+              >
+            </div>
+            <div class="input-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="categoryDescription">
+              Description <span class="required">*</span>
+            </label>
+
+            <textarea
+              id="categoryDescription"
+              name="categoryDescription"
+              placeholder="Describe the brand in detail..."
+              maxlength="500"
+              rows="5"
+            ></textarea>
+
+            <div class="char-counter">
+              <span>Provide detailed description</span>
+              <span class="char-remaining"
+                ><span id="descCount">0</span>/500</span
+              >
+            </div>
+            <div class="input-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="categoryImage">
+              Brand Logo <span class="required">*</span>
+            </label>
+
+            <div class="image-upload-container">
+              <input
+                type="file"
+                id="categoryImage"
+                name="categoryImage"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                hidden
+              />
+
+              <div class="upload-area" id="uploadArea">
+                <div class="upload-content">
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <p class="upload-text">Click to upload or drag and drop</p>
+                  <p class="upload-subtext">
+                    PNG, JPG, JPEG or WEBP (MAX. 5MB)
+                  </p>
+                </div>
+              </div>
+
+              <div
+                class="image-preview"
+                id="imagePreview"
+                style="display: none"
+              >
+                <img id="previewImg" src="" alt="Preview" />
+                <button type="button" class="remove-image" id="removeImage">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="input-feedback"></div>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary" id="clearBtn">
+            Clear
+          </button>
+
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            + Create Brand
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Toast Notification (hidden by default) -->
+    <div class="toast" id="toast">Brand created successfully!</div>
+
+    <script src="../scripts/brand_form.js"></script>
+  </body>
+</html>

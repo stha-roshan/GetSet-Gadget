@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | Brands</title>
+    <link rel="stylesheet" href="../styles/brand_management.css" />
+  </head>
+  <body>
+    <div class="container">
+      <admin-sidebar></admin-sidebar>
+
+      <div class="main-content">
+        <div class="header">
+          <h1>Brand Management</h1>
+          <button class="btn-primary">+ Add New Brand</button>
+        </div>
+
+        <div class="filters">
+          <div class="search-box">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search by name or description..."
+              onkeyup="handleSearch()"
+            />
+          </div>
+
+           <div class="stats-container">
+            <div class="stat-card">
+                <h3>Total Brands</h3>
+                <div class="stat-value" id="totalBrands">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Brands</h3>
+                <div class="stat-value" id="activeBrands">0</div>
+            </div>
+        </div>
+
+        <div class="brands-container">
+            <div class="brands-grid" id="brandsGrid"></div>
+        </div>
+      </div>
+    </div>
+    <script src="../scripts/nav.js"></script>
+    <!-- <script src="../scripts/product_management.js"></script> -->
+  </body>
+</html>

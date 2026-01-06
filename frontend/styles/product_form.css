@@ -1,0 +1,362 @@
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+         .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+         .form-header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .form-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-content {
+            padding: 30px;
+            min-height: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+         .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #d32f2f;
+        }
+
+         .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #d32f2f;
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+            max-height: 300px;
+            font-family: inherit;
+        }
+
+        .form-group select:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+            color: #999;
+        }
+
+        .char-counter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .char-remaining {
+            font-weight: 600;
+        }
+
+         .char-remaining.warning {
+            color: #ff9800;
+        }
+
+        .char-remaining.critical {
+            color: #d32f2f;
+        }
+
+         /* Validation Feedback */
+        .input-feedback {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 12px;
+            min-height: 18px;
+        }
+
+        .feedback-icon {
+            font-size: 14px;
+        }
+
+        .error {
+            color: #d32f2f;
+        }
+
+        .error input,
+        .error textarea,
+        .error select {
+            border-color: #d32f2f;
+            background-color: rgba(211, 47, 47, 0.05);
+        }
+
+        .success {
+            color: #4caf50;
+        }
+
+        .success input,
+        .success textarea,
+        .success select {
+            border-color: #4caf50;
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+
+         /* Two Column Layout */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+         /* Image Upload Section */
+        .image-upload-area {
+            border: 2px dashed #d32f2f;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            background: rgba(211, 47, 47, 0.02);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+         .image-upload-area:hover {
+            border-color: #b71c1c;
+            background: rgba(211, 47, 47, 0.05);
+        }
+
+        .image-upload-area.dragover {
+            border-color: #b71c1c;
+            background: rgba(211, 47, 47, 0.1);
+            transform: scale(1.02);
+        }
+
+         .image-upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .image-upload-text {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+         .image-upload-hint {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+         .image-upload-link {
+            color: #d32f2f;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+         #imageInput {
+            display: none;
+        }
+
+         .image-preview-container {
+            margin-top: 15px;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+         .image-info {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            justify-content: center;
+        }
+
+         .btn-icon {
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+         .btn-icon:hover {
+            background: #e0e0e0;
+        }
+
+         /* Help Text */
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+         /* Form Footer */
+        .form-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            padding: 20px 30px;
+            border-top: 1px solid #e0e0e0;
+            background: #f9f9f9;
+        }
+
+         .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 2px solid #ddd;
+            color: #333;
+        }
+
+         .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #999;
+        }
+
+        .btn-primary {
+            background: #d32f2f;
+            color: white;
+            flex: 1;
+        }
+
+         .btn-primary:hover:not(:disabled) {
+            background: #b71c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+         /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #d32f2f;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success {
+            background: #4caf50;
+        }
+
+         @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+         /* Loading State */
+        .loading-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
