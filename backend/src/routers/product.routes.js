@@ -3,6 +3,7 @@ import multer from "multer";
 import {
   createProduct,
   editProduct,
+  getProductById,
 } from "../controllers/product.controller.js";
 import path from "path";
 
@@ -47,5 +48,7 @@ const upload = multer({
 
 router.post("/create", upload.single("image"), createProduct);
 router.patch("/edit/:productId", upload.single("image"), editProduct);
+
+router.get("/:productId", getProductById);
 
 export default router;

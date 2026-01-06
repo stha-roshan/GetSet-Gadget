@@ -21,17 +21,10 @@ const createProduct = asyncHandler(async (req, res) => {
     );
   }
 
-  const {
-    name,
-    description,
-    category,
-    brand,
-    price,
-    stock,
-    totalSales,
-  } = req.body;
+  const { name, description, category, brand, price, stock, totalSales } =
+    req.body;
 
-  const image = req.file.path
+  const image = req.file.path;
 
   const signedImage = await uploadOnCloudinary(image);
   if (!signedImage) {
@@ -121,4 +114,24 @@ const editProduct = asyncHandler(async (req, res) => {
     );
 });
 
-export { createProduct, editProduct };
+const getProductById = asyncHandler(async (req, res) => {
+  const { productId } = req.params;
+
+  if (!productId || !productId.match(/^[0-9a-fA-F]{24}$/)) {
+    throw new ApiError(400, "Invalid product ID format", MODULE);
+  }
+
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    throw new ApiError(404, "Product not found", MODULE);
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, "Product fetched successfully", product, MODULE)
+    );
+});
+
+export { createProduct, editProduct, getProductById };

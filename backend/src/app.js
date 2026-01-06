@@ -16,6 +16,7 @@ import addressRoutes from "./routers/address.routes.js";
 import categoryRoutes from "./routers/category.routes.js";
 import productRoutes from "./routers/product.routes.js";
 import brandRoutes from "./routers/brand.routes.js";
+import cartRoutes from "./routers/cart.routes.js"
 import userStaticRoutes from "./routers/static_user.routes.js";
 import adminStaticRoutes from "./routers/static_admin.routes.js";
 
@@ -26,6 +27,7 @@ app.use("/api/address", addressRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/brands", brandRoutes);
+app.use("/api/cart", cartRoutes)
 app.use("/", userStaticRoutes);
 app.use("/admin", adminStaticRoutes);
 
