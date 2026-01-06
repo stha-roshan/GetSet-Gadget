@@ -1,11 +1,454 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leuze Navigation Bar</title>
+    <link
+      href="https://cdn.boxicons.com/3.0.3/fonts/basic/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.boxicons.com/3.0.3/fonts/brands/boxicons-brands.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 16px; /* Base font size for rem calculations */
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      /* Main header container */
+      .header-container {
+        background-color: #ffffff;
+        padding: 3.5vh 15vw;
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 90%;
+        margin: 0 auto;
+      }
+
+      /* Logo */
+      .logo {
+        font-size: 2.625rem; /* 42px converted to rem */
+        font-weight: bold;
+        color: #e30613;
+        font-family: Arial, sans-serif;
+        letter-spacing: -0.0625rem;
+      }
+
+      /* Search bar */
+      .search-container {
+        flex: 1;
+        max-width: 28vw;
+        margin: 0 2.5vw;
+        position: relative;
+      }
+
+      .search-bar {
+        width: 100%;
+        padding: 0.75rem 1.25rem;
+        border: 0.0625rem solid #ddd;
+        border-radius: 0;
+        font-size: 0.875rem;
+        outline: none;
+      }
+
+      .search-bar::placeholder {
+        color: #999;
+      }
+
+      .search-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: #e30613;
+        border: none;
+        padding: 0.75rem 0.9375rem;
+        cursor: pointer;
+        height: 100%;
+        transition: background-color 0.3s ease;
+      }
+
+      .search-btn:hover {
+        background-color: #333;
+      }
+
+      .search-btn .search-icon {
+        font-size: 1.125rem;
+      }
+
+      .header-icons {
+        display: flex;
+        align-items: center;
+        gap: 1.875vw;
+      }
+
+      .watch-list,
+      .compare,
+      .cart {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .watch-list a,
+      .compare a,
+      .cart a {
+        color: #333;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s;
+      }
+
+      .watch-list:hover a,
+      .compare:hover a,
+      .cart:hover a {
+        color: #e30613;
+      }
+
+      .watch-list .watch-list-icon,
+      .compare .compare-icon,
+      .cart .cart-icon {
+        font-size: 1.375rem;
+        color: #333;
+        transition: color 0.3s;
+      }
+
+      .watch-list:hover .watch-list-icon,
+      .compare:hover .compare-icon,
+      .cart:hover .cart-icon {
+        color: #e30613;
+      }
+
+      .badge {
+        position: absolute;
+        top: -0.5rem;
+        right: -0.5rem;
+        background-color: #e30613;
+        color: white;
+        border-radius: 50%;
+        width: 1.25rem;
+        height: 1.25rem;
+        font-size: 0.6875rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .nav-container {
+        border-bottom: 0.0625rem solid #e5e5e5;
+        padding: 0 15vw;
+      }
+
+      .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 2.2vw;
+        max-width: 90%;
+        margin: 0 auto;
+      }
+
+      .nav-menu li {
+        padding: 1.125rem 0;
+      }
+
+      .nav-menu a {
+        text-decoration: none;
+        color: #333;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: color 0.3s;
+      }
+
+      .nav-menu a:hover {
+        color: #e30613;
+      }
+
+      .hero-section {
+        height: 600px;
+        background-color: #333;
+      }
+
+      .top-products-section {
+        height: 600px;
+        background: rgb(150, 222, 222);
+      }
+
+      .top-products-section h1 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 5px;
+        /* margin: auto; */
+      }
+
+      .top-brands-section {
+        height: 400px;
+        background-color: #ddd;
+      }
+
+      footer {
+        height: 300px;
+        background: #333;
+      }
+
+      /* product card */
+
+      .product-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        width: 300px;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .product-image {
+        width: 100%;
+        height: 200px;
+        background-color: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 15px 15px;
+      }
+
+      .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .product-image.placeholder {
+        background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+        color: #999;
+        font-size: 14px;
+      }
+
+      .product-info {
+        padding: 15px;
+      }
+
+      .product-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 10px;
+      }
+
+      .product-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        flex: 1;
+        word-break: break-word;
+      }
+
+      .product-id {
+        font-size: 12px;
+        color: #999;
+        background-color: #f0f0f0;
+        padding: 2px 8px;
+        border-radius: 3px;
+        margin-bottom: 8px;
+      }
+
+      .product-description {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.4;
+        margin-bottom: 12px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .product-details {
+        display: flex;
+        margin-bottom: 12px;
+        font-size: 13px;
+        justify-content: space-between;
+      }
+
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .detail-label {
+        color: #999;
+        font-weight: 500;
+      }
+
+      .detail-value {
+        color: #333;
+        font-weight: 600;
+        margin-top: 2px;
+      }
+
+      .price {
+        color: #d32f2f;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .badge-brand {
+        background-color: #e3f2fd;
+        color: #1976d2;
+        padding: 4px 8px;
+        border-radius: 3px;
+      }
+
+      .badge-category {
+        background-color: #e8f5e9;
+        color: #1cc92a;
+        padding: 4px 8px;
+        border-radius: 3px;
+      }
+
+      .product-actions {
+        display: flex;
+        gap: 8px;
+        border-top: 1px solid #eee;
+        padding-top: 12px;
+      }
+
+      .btn-small {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        background-color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-small:hover {
+        background-color: #f5f5f5;
+        border-color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-container">
+      <div class="header-content">
+        <div class="logo">Leuze</div>
+
+        <div class="search-container">
+          <input
+            type="text"
+            class="search-bar"
+            placeholder="What are you looking for?"
+          />
+          <button class="search-btn">
+            <i class="bxr bx-search-big search-icon" style="color: #ffffff"></i>
+          </button>
+        </div>
+
+        <div class="header-icons">
+          <div class="watch-list">
+            <i class="bxr bxs-bookmark watch-list-icon"></i>
+            <a href="#">
+              Watch list
+              <span class="badge">0</span>
+            </a>
+          </div>
+
+          <div class="compare">
+            <i class="bxr bxs-compare-alt compare-icon"></i>
+            <a href="#">
+              Comparison
+              <span class="badge">0</span>
+            </a>
+          </div>
+
+          <div class="cart">
+            <i class="bxr bxs-cart cart-icon"></i>
+            <a href="#">
+              <span class="badge">0</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-container">
+      <ul class="nav-menu">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">All Products</a></li>
+        <li><a href="#">Categories</a></li>
+        <li><a href="#">Brands</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero-section"></div>
+
+    <div class="top-products-section">
+      <h1>Top products</h1>
+      <div class="top-products-container">
+        <div class="product-card" id="productCard">
+          <div class="product-image placeholder" id="productImage">
+            <img src="../images/logo.png" alt="getset Gadget" />
+          </div>
+          <div class="product-info" id="productInfo">
+            <div class="product-name" id="productName">Wireless Headphones</div>
+            <div class="product-description" id="productDescription">
+              High-quality noise-canceling headphones
+            </div>
+
+            <div class="product-details">
+              <div class="detail-item">
+                <span class="detail-label">Price</span>
+                <span class="price" id="productPrice">2,999</span>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-label">Brand</span>
+                <span class="badge-brand" id="productBrand">Samsung</span>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-label">Category</span>
+                <span class="badge-category" id="productCategory"
+                  >Headphones</span
+                >
+              </div>
+            </div>
+            <div class="product-actions">
+              <button class="btn-small">View detail</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-brands-section"></div>
+
+    <footer></footer>
+  </body>
 </html>

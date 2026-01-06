@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../styles/dashboard.css">
+  </head>
+  <body>
+    <div class="container">
+      <admin-sidebar></admin-sidebar>
+
+      <div class="main-content">
+        <div class="page-header">
+          <h1>Dashboard Overview</h1>
+          <p>Welcome back! Here's what's happening with your store today.</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-title">Total revenue</div>
+              </div>
+              <div class="stat-icon">💰</div>
+            </div>
+            <div class="stat-value" id="totalRevenue">रु0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-title">Total Orders</div>
+              </div>
+              <div class="stat-icon">📦</div>
+            </div>
+            <div class="stat-value" id="totalOrders">0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-title">Total Products</div>
+              </div>
+              <div class="stat-icon">🛍️</div>
+            </div>
+            <div class="stat-value" id="totalProducts">0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-title">Total Customers</div>
+              </div>
+              <div class="stat-icon">👥</div>
+            </div>
+            <div class="stat-value" id="totalCustomers">0</div>
+          </div>
+
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-section">
+          
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Sales Overview Last 7 days</h3>
+            </div>
+            <div class="sales-chart" id="salesChart"></div>
+          </div>
+
+          <!-- <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Category Distribution</h3>
+                    </div>
+                    <div class="category-chart">
+                        <div class="pie-chart">
+                            <div class="pie-center">
+                                <div class="pie-total">156</div>
+                                <div class="pie-label">Products</div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-section">
+          <div class="activity-card">
+            <h3>
+              Recent Orders
+              <a href="#" class="view-all">View All →</a>
+            </h3>
+            <div id="recentOrders"></div>
+          </div>
+
+          <div class="activity-card">
+            <h3>
+              Top Products
+              <a href="#" class="view-all">View All →</a>
+            </h3>
+            <div id="topProducts"></div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <h3>Quick Actions</h3>
+          <div class="actions-grid">
+            <button class="action-btn">
+              <div class="action-btn-icon">➕</div>
+              <div class="action-btn-text">Add Product</div>
+            </button>
+            <button class="action-btn">
+              <div class="action-btn-icon">📋</div>
+              <div class="action-btn-text">View Orders</div>
+            </button>
+            <button class="action-btn">
+              <div class="action-btn-icon">🏷️</div>
+              <div class="action-btn-text">Add Category</div>
+            </button>
+            <button class="action-btn">
+              <div class="action-btn-icon">🔖</div>
+              <div class="action-btn-text">Add Brand</div>
+            </button>
+            <button class="action-btn">
+              <div class="action-btn-icon">👥</div>
+              <div class="action-btn-text">Manage Users</div>
+            </button>
+            <button class="action-btn">
+              <div class="action-btn-icon">⚙️</div>
+              <div class="action-btn-text">Settings</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../scripts/nav.js"></script>
+  </body>
+</html>

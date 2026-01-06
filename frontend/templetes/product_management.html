@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | Products</title>
+    <link rel="stylesheet" href="../styles/product_management.css" />
+  </head>
+  <body>
+    <div class="container">
+      <admin-sidebar></admin-sidebar>
+
+      <div class="main-content">
+        <div class="header">
+          <h1>Products Management</h1>
+          <button class="btn-primary">+ Add New Product</button>
+        </div>
+
+        <div class="filters">
+          <div class="search-box">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search by name, ID, or brand..."
+              onkeyup="handleSearch()"
+            />
+          </div>
+
+          <div class="sort-box">
+            <select id="sortSelect" onchange="handleSort()">
+              <option value="name">Sort by Name</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="stock">Stock Quantity</option>
+              <option value="date">Date Added</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="productsGrid" class="products-grid">
+          <!-- <div class="product-card" id="productCard">
+                    <div class="product-image placeholder" id="productImage">
+                        📷 No Image
+                    </div>
+                    <div class="product-info" id="productInfo">
+                        <div class="product-id" id="productId">ID: #1</div>
+                        <div class="product-name" id="productName">Wireless Headphones</div>
+                        <div class="product-description" id="productDescription">High-quality noise-canceling headphones</div>
+                        <div class="product-brand-category" id="productBrand">
+                            <span class="badge">Sony</span>
+                            <span class="badge">Audio</span>
+                        </div>
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Price</span>
+                                <span class="price" id="productPrice">2,999</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Stock</span>
+                                <span class="stock-badge ${stockClass}" id="productStock">15</span>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-small edit" id="edit">✎ Edit</button>
+                            <button class="btn-small delete" id="delete">🗑 Delete</button>
+                        </div>
+                    </div>
+            </div> -->
+        </div>
+      </div>
+    </div>
+    <script src="../scripts/nav.js"></script>
+    <script src="../scripts/product_management.js"></script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | Category</title>
+    <link rel="stylesheet" href="../styles/category_management.css" />
+  </head>
+  <body>
+    <div class="container">
+      <admin-sidebar></admin-sidebar>
+
+      <div class="main-content">
+        <div class="page-header">
+          <h1>Category Management</h1>
+          <button class="btn-add" id="addCategoryBtn">+ Add Category</button>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="search-filter">
+          <div class="search-box">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search by name or description..."
+            />
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-container">
+          <div class="stat-card">
+            <h3>Total Categories</h3>
+            <div class="stat-value" id="totalCategories">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Active Categories</h3>
+            <div class="stat-value" id="activeCategories">0</div>
+          </div>
+        </div>
+
+        <div class="categories-container">
+          <div class="categories-grid" id="categoriesGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../scripts/nav.js"></script>
+    <script></script>
+  </body>
+</html>
