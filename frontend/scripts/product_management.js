@@ -1,4 +1,4 @@
-console.log("js working");
+// console.log("js working");
 
 const products = [
   {

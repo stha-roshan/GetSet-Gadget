@@ -3,16 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leuze Navigation Bar</title>
+    <title>Leuze - Computer Accessories</title>
     <link
-      href="https://cdn.boxicons.com/3.0.3/fonts/basic/boxicons.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.boxicons.com/3.0.3/fonts/brands/boxicons-brands.min.css"
+      href="https://cdn.boxicons.com/2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
     <style>
+      /* --- RESET & VARIABLES --- */
+      :root {
+        --primary: #e30613;
+        --dark: #333;
+        --light: #f4f4f4;
+        --gray: #999;
+        --white: #fff;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        --transition: all 0.3s ease;
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -20,86 +27,78 @@
       }
 
       html {
-        font-size: 16px; /* Base font size for rem calculations */
+        font-size: 16px;
+        scroll-behavior: smooth;
       }
 
       body {
-        font-family: Arial, sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--dark);
+        background-color: var(--white);
+        overflow-x: hidden;
       }
 
-      /* Main header container */
+      ul { list-style: none; }
+      a { text-decoration: none; }
+
+      /* --- YOUR ORIGINAL HEADER STYLES (Keep Unchanged) --- */
       .header-container {
         background-color: #ffffff;
-        padding: 3.5vh 15vw;
+        padding: 2rem 10%; /* Adjusted slightly for better responsive alignment */
       }
 
       .header-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        max-width: 90%;
+        max-width: 1400px;
         margin: 0 auto;
       }
 
-      /* Logo */
       .logo {
-        font-size: 2.625rem; /* 42px converted to rem */
+        font-size: 2.6rem;
         font-weight: bold;
-        color: #e30613;
-        font-family: Arial, sans-serif;
-        letter-spacing: -0.0625rem;
+        color: var(--primary);
+        letter-spacing: -1px;
       }
 
-      /* Search bar */
       .search-container {
         flex: 1;
-        max-width: 28vw;
-        margin: 0 2.5vw;
+        max-width: 500px;
+        margin: 0 2rem;
         position: relative;
       }
 
       .search-bar {
         width: 100%;
-        padding: 0.75rem 1.25rem;
-        border: 0.0625rem solid #ddd;
-        border-radius: 0;
-        font-size: 0.875rem;
+        padding: 0.8rem 1.2rem;
+        border: 1px solid #ddd;
+        font-size: 0.9rem;
         outline: none;
-      }
-
-      .search-bar::placeholder {
-        color: #999;
       }
 
       .search-btn {
         position: absolute;
         right: 0;
         top: 0;
-        background-color: #e30613;
+        background-color: var(--primary);
         border: none;
-        padding: 0.75rem 0.9375rem;
+        padding: 0 1.2rem;
         cursor: pointer;
         height: 100%;
-        transition: background-color 0.3s ease;
+        transition: var(--transition);
       }
 
-      .search-btn:hover {
-        background-color: #333;
-      }
-
-      .search-btn .search-icon {
-        font-size: 1.125rem;
-      }
+      .search-btn:hover { background-color: var(--dark); }
+      .search-btn i { font-size: 1.2rem; color: white; }
 
       .header-icons {
         display: flex;
         align-items: center;
-        gap: 1.875vw;
+        gap: 1.5rem;
       }
 
-      .watch-list,
-      .compare,
-      .cart {
+      .watch-list, .compare, .cart {
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -107,45 +106,33 @@
         position: relative;
       }
 
-      .watch-list a,
-      .compare a,
-      .cart a {
-        color: #333;
-        text-decoration: none;
-        font-size: 1rem;
-        transition: color 0.3s;
+      .watch-list a, .compare a, .cart a {
+        color: var(--dark);
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: var(--transition);
+      }
+      
+      .watch-list i, .compare i, .cart i {
+        font-size: 1.4rem;
+        color: var(--dark);
       }
 
-      .watch-list:hover a,
-      .compare:hover a,
-      .cart:hover a {
-        color: #e30613;
-      }
-
-      .watch-list .watch-list-icon,
-      .compare .compare-icon,
-      .cart .cart-icon {
-        font-size: 1.375rem;
-        color: #333;
-        transition: color 0.3s;
-      }
-
-      .watch-list:hover .watch-list-icon,
-      .compare:hover .compare-icon,
-      .cart:hover .cart-icon {
-        color: #e30613;
+      .watch-list:hover a, .compare:hover a, .cart:hover a,
+      .watch-list:hover i, .compare:hover i, .cart:hover i {
+        color: var(--primary);
       }
 
       .badge {
         position: absolute;
-        top: -0.5rem;
-        right: -0.5rem;
-        background-color: #e30613;
+        top: -8px;
+        right: -8px;
+        background-color: var(--primary);
         color: white;
         border-radius: 50%;
-        width: 1.25rem;
-        height: 1.25rem;
-        font-size: 0.6875rem;
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -153,245 +140,385 @@
       }
 
       .nav-container {
-        border-bottom: 0.0625rem solid #e5e5e5;
-        padding: 0 15vw;
+        border-bottom: 1px solid #e5e5e5;
+        border-top: 1px solid #e5e5e5;
       }
 
       .nav-menu {
         display: flex;
-        list-style: none;
-        gap: 2.2vw;
-        max-width: 90%;
+        gap: 2rem;
+        max-width: 1400px;
         margin: 0 auto;
+        padding: 0 10%; /* Matches header padding */
       }
 
-      .nav-menu li {
-        padding: 1.125rem 0;
-      }
+      .nav-menu li { padding: 1rem 0; }
 
       .nav-menu a {
-        text-decoration: none;
-        color: #333;
-        font-size: 1rem;
+        color: var(--dark);
         font-weight: 600;
-        transition: color 0.3s;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        transition: var(--transition);
       }
 
-      .nav-menu a:hover {
-        color: #e30613;
+      .nav-menu a:hover { color: var(--primary); }
+
+      /* --- NEW DESIGN SECTIONS --- */
+
+      /* Utilities */
+      .section-padding {
+        padding: 4rem 10%;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        font-weight: 700;
+        position: relative;
+        display: inline-block;
+      }
+      
+      .section-title::after {
+        content: '';
+        position: absolute;
+        width: 60%;
+        height: 3px;
+        background: var(--primary);
+        bottom: -5px;
+        left: 0;
       }
 
+      /* Hero Section */
       .hero-section {
-        height: 600px;
-        background-color: #333;
+        height: 500px;
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        padding: 0 10%;
+        color: white;
       }
 
+      .hero-content {
+        max-width: 600px;
+      }
+
+      .hero-content h2 {
+        font-size: 3.5rem;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+      }
+
+      .hero-content p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 4px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+        transition: var(--transition);
+      }
+
+      .btn-primary:hover {
+        background-color: #b0050f;
+        transform: translateY(-2px);
+      }
+
+      /* Features / Value Props */
+      .features-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        background: #f9f9f9;
+        padding: 3rem 10%;
+      }
+
+      .feature-box {
+        text-align: center;
+        padding: 1rem;
+      }
+
+      .feature-box i {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+
+      .feature-box h4 { margin-bottom: 0.5rem; }
+      .feature-box p { font-size: 0.9rem; color: #666; }
+
+      /* Categories Grid */
+      .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .category-card {
+        height: 250px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .category-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .category-card:hover img {
+        transform: scale(1.1);
+      }
+
+      .cat-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        padding: 2rem 1rem 1rem;
+        color: white;
+      }
+
+      /* Product Section */
       .top-products-section {
-        height: 600px;
-        background: rgb(150, 222, 222);
+        background-color: white;
       }
 
-      .top-products-section h1 {
-        font-size: 28px;
-        color: #333;
-        margin-bottom: 5px;
-        /* margin: auto; */
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
       }
-
-      .top-brands-section {
-        height: 400px;
-        background-color: #ddd;
-      }
-
-      footer {
-        height: 300px;
-        background: #333;
-      }
-
-      /* product card */
 
       .product-card {
         background: white;
+        border: 1px solid #eee;
         border-radius: 8px;
         overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        width: 300px;
+        transition: var(--transition);
+        position: relative;
       }
 
       .product-card:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        border-color: transparent;
         transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
       }
 
       .product-image {
-        width: 100%;
-        height: 200px;
-        background-color: #e0e0e0;
+        height: 220px;
+        padding: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
-        padding: 15px 15px;
+        background-color: white;
+        border-bottom: 1px solid #f0f0f0;
       }
 
       .product-image img {
-        width: 100%;
-        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
         object-fit: contain;
       }
 
-      .product-image.placeholder {
-        background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
-        color: #999;
-        font-size: 14px;
-      }
+      .product-info { padding: 1.5rem; }
 
-      .product-info {
-        padding: 15px;
-      }
-
-      .product-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: start;
-        margin-bottom: 10px;
+      .badge-category {
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
       .product-name {
-        font-size: 16px;
+        font-size: 1.1rem;
         font-weight: 600;
-        color: #333;
-        flex: 1;
-        word-break: break-word;
-      }
-
-      .product-id {
-        font-size: 12px;
-        color: #999;
-        background-color: #f0f0f0;
-        padding: 2px 8px;
-        border-radius: 3px;
-        margin-bottom: 8px;
-      }
-
-      .product-description {
-        font-size: 13px;
-        color: #666;
-        line-height: 1.4;
-        margin-bottom: 12px;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
+        margin: 5px 0 10px;
+        color: var(--dark);
+        white-space: nowrap;
         overflow: hidden;
+        text-overflow: ellipsis;
       }
 
-      .product-details {
+      .product-rating {
+        color: #ffc107;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+      }
+
+      .price-row {
         display: flex;
-        margin-bottom: 12px;
-        font-size: 13px;
         justify-content: space-between;
-      }
-
-      .detail-item {
-        display: flex;
-        flex-direction: column;
         align-items: center;
-      }
-
-      .detail-label {
-        color: #999;
-        font-weight: 500;
-      }
-
-      .detail-value {
-        color: #333;
-        font-weight: 600;
-        margin-top: 2px;
+        margin-top: 10px;
       }
 
       .price {
-        color: #d32f2f;
-        font-size: 18px;
+        color: var(--primary);
         font-weight: 700;
+        font-size: 1.2rem;
       }
 
-      .badge-brand {
-        background-color: #e3f2fd;
-        color: #1976d2;
-        padding: 4px 8px;
-        border-radius: 3px;
-      }
-
-      .badge-category {
-        background-color: #e8f5e9;
-        color: #1cc92a;
-        padding: 4px 8px;
-        border-radius: 3px;
-      }
-
-      .product-actions {
+      .btn-add {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #f0f0f0;
         display: flex;
-        gap: 8px;
-        border-top: 1px solid #eee;
-        padding-top: 12px;
-      }
-
-      .btn-small {
-        flex: 1;
-        padding: 8px 12px;
-        border: 1px solid #ddd;
-        background-color: white;
-        border-radius: 4px;
+        align-items: center;
+        justify-content: center;
+        border: none;
         cursor: pointer;
-        font-size: 12px;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        transition: var(--transition);
       }
 
-      .btn-small:hover {
-        background-color: #f5f5f5;
-        border-color: #999;
+      .btn-add:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      /* Banner Section */
+      .promo-banner {
+        background-color: #1a1a1a;
+        color: white;
+        padding: 4rem 10%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
+
+      .promo-text h3 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+      .promo-text span { color: var(--primary); }
+
+      /* Brands */
+      .brands-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+        opacity: 0.6;
+      }
+      
+      .brand-logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #555;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .brand-logo i { font-size: 2rem; }
+
+      /* Footer */
+      footer {
+        background-color: #111;
+        color: #bbb;
+        padding: 4rem 10% 2rem;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 3rem;
+        margin-bottom: 3rem;
+      }
+
+      .footer-col h4 {
+        color: white;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+      }
+
+      .footer-col ul li { margin-bottom: 0.8rem; }
+      
+      .footer-col ul li a {
+        color: #bbb;
+        font-size: 0.9rem;
+        transition: var(--transition);
+      }
+
+      .footer-col ul li a:hover { color: var(--primary); padding-left: 5px; }
+
+      .social-links { display: flex; gap: 1rem; margin-top: 1rem; }
+      .social-links a {
+        width: 35px;
+        height: 35px;
+        background: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: white;
+        transition: var(--transition);
+      }
+      .social-links a:hover { background: var(--primary); }
+
+      .copyright {
+        text-align: center;
+        border-top: 1px solid #333;
+        padding-top: 2rem;
+        font-size: 0.85rem;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .header-content { flex-direction: column; gap: 1rem; }
+        .search-container { width: 100%; margin: 1rem 0; }
+        .nav-menu { display: none; } /* Simplified for demo, usually becomes hamburger */
+        .hero-content h2 { font-size: 2rem; }
       }
     </style>
   </head>
   <body>
+    
     <div class="header-container">
       <div class="header-content">
-        <div class="logo">Leuze</div>
+        <div class="logo">GSG</div>
 
         <div class="search-container">
           <input
             type="text"
             class="search-bar"
-            placeholder="What are you looking for?"
+            placeholder="Search for mouse, keyboard, monitor..."
           />
           <button class="search-btn">
-            <i class="bxr bx-search-big search-icon" style="color: #ffffff"></i>
+            <i class="bx bx-search" style="color: #ffffff"></i>
           </button>
         </div>
 
         <div class="header-icons">
           <div class="watch-list">
-            <i class="bxr bxs-bookmark watch-list-icon"></i>
-            <a href="#">
-              Watch list
-              <span class="badge">0</span>
-            </a>
+            <i class="bx bx-heart"></i>
+            <a href="#">Wishlist <span class="badge">2</span></a>
           </div>
 
           <div class="compare">
-            <i class="bxr bxs-compare-alt compare-icon"></i>
-            <a href="#">
-              Comparison
-              <span class="badge">0</span>
-            </a>
+            <i class="bx bx-git-compare"></i>
+            <a href="#">Compare <span class="badge">0</span></a>
           </div>
 
           <div class="cart">
-            <i class="bxr bxs-cart cart-icon"></i>
-            <a href="#">
-              <span class="badge">0</span>
-            </a>
+            <i class="bx bx-cart"></i>
+            <a href="#">Cart <span class="badge">1</span></a>
           </div>
         </div>
       </div>
@@ -399,56 +526,237 @@
 
     <nav class="nav-container">
       <ul class="nav-menu">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">All Products</a></li>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/products">All Products</a></li>
         <li><a href="#">Categories</a></li>
         <li><a href="#">Brands</a></li>
       </ul>
     </nav>
 
-    <div class="hero-section"></div>
+    <section class="hero-section">
+      <div class="hero-content">
+        <h2>Level Up Your <br>Setup Today</h2>
+        <p>Discover the latest high-performance gear for gaming, work, and creativity. Top brands, best prices.</p>
+        <button class="btn-primary">Shop Now</button>
+      </div>
+    </section>
 
-    <div class="top-products-section">
-      <h1>Top products</h1>
-      <div class="top-products-container">
-        <div class="product-card" id="productCard">
-          <div class="product-image placeholder" id="productImage">
-            <img src="../images/logo.png" alt="getset Gadget" />
+    <section class="features-section">
+      <div class="feature-box">
+        <i class='bx bx-truck'></i>
+        <h4>Free Shipping</h4>
+        <p>On all orders over $99</p>
+      </div>
+      <div class="feature-box">
+        <i class='bx bx-shield-quarter'></i>
+        <h4>Secure Payment</h4>
+        <p>100% secure payment</p>
+      </div>
+      <div class="feature-box">
+        <i class='bx bx-headphone'></i>
+        <h4>24/7 Support</h4>
+        <p>Dedicated support</p>
+      </div>
+      <div class="feature-box">
+        <i class='bx bx-refresh'></i>
+        <h4>30 Day Returns</h4>
+        <p>Easy returns policy</p>
+      </div>
+    </section>
+
+    <section class="section-padding">
+      <h3 class="section-title">Shop by Category</h3>
+      <div class="categories-grid">
+        <div class="category-card">
+          <img src="https://images.unsplash.com/photo-1595225476474-87563907a212?q=80&w=2071&auto=format&fit=crop" alt="Keyboards">
+          <div class="cat-overlay">
+            <h4>Keyboards</h4>
           </div>
-          <div class="product-info" id="productInfo">
-            <div class="product-name" id="productName">Wireless Headphones</div>
-            <div class="product-description" id="productDescription">
-              High-quality noise-canceling headphones
-            </div>
-
-            <div class="product-details">
-              <div class="detail-item">
-                <span class="detail-label">Price</span>
-                <span class="price" id="productPrice">2,999</span>
-              </div>
-
-              <div class="detail-item">
-                <span class="detail-label">Brand</span>
-                <span class="badge-brand" id="productBrand">Samsung</span>
-              </div>
-
-              <div class="detail-item">
-                <span class="detail-label">Category</span>
-                <span class="badge-category" id="productCategory"
-                  >Headphones</span
-                >
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-small">View detail</button>
-            </div>
+        </div>
+        <div class="category-card">
+          <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?q=80&w=2028&auto=format&fit=crop" alt="Mice">
+          <div class="cat-overlay">
+            <h4>Gaming Mice</h4>
+          </div>
+        </div>
+        <div class="category-card">
+          <img src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=2576&auto=format&fit=crop" alt="Audio">
+          <div class="cat-overlay">
+            <h4>Headsets & Audio</h4>
+          </div>
+        </div>
+         <div class="category-card">
+          <img src="https://images.unsplash.com/photo-1547082299-bb74237b612c?q=80&w=2070&auto=format&fit=crop" alt="Monitors">
+          <div class="cat-overlay">
+            <h4>Monitors</h4>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="top-brands-section"></div>
+    <section class="top-products-section section-padding">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+        <h3 class="section-title" style="margin-bottom:0">Best Sellers</h3>
+        <a href="#" style="color:var(--primary); font-weight:600;">View All <i class='bx bx-right-arrow-alt'></i></a>
+      </div>
+      
+      <div class="products-grid">
+        
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://assets.corsair.com/image/upload/c_pad,q_auto,h_1024,w_1024,f_auto/products/Headsets/HS80-MAX-WIRELESS/CA-9011295-NA/Gallery/HS80_MAX_STEEL_GRAY_01.webp?width=1080&quality=85&auto=webp&format=webp" alt="Product">
+          </div>
+          <div class="product-info">
+            <div class="badge-category">Audio</div>
+            <h4 class="product-name">Corsair HS80 Wireless</h4>
+            <div class="product-rating">
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star-half'></i>
+            </div>
+            <div class="price-row">
+              <span class="price">$149.99</span>
+              <button class="btn-add"><i class='bx bx-plus'></i></button>
+            </div>
+          </div>
+        </div>
 
-    <footer></footer>
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://resource.logitech.com/content/dam/gaming/en/products/pro-x-superlight-2-dex/gallery/black/pro-x-superlight-2-dex-black-gallery-1.png" alt="Product">
+          </div>
+          <div class="product-info">
+            <div class="badge-category">Mice</div>
+            <h4 class="product-name">Logitech G Pro X Superlight</h4>
+            <div class="product-rating">
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+            </div>
+            <div class="price-row">
+              <span class="price">$159.00</span>
+              <button class="btn-add"><i class='bx bx-plus'></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://assets2.razerzone.com/images/pnx.assets/d2446702e1c3a63f0d7e63b0b301b0f1/razer-blackwidow-v4-pro-75-black-500x500.png" alt="Product">
+          </div>
+          <div class="product-info">
+            <div class="badge-category">Keyboards</div>
+            <h4 class="product-name">Razer BlackWidow V4</h4>
+            <div class="product-rating">
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bx-star'></i>
+            </div>
+            <div class="price-row">
+              <span class="price">$169.99</span>
+              <button class="btn-add"><i class='bx bx-plus'></i></button>
+            </div>
+          </div>
+        </div>
+
+         <div class="product-card">
+          <div class="product-image">
+            <img src="https://dlcdnwebimgs.asus.com/gain/49D9795C-6815-4D66-879C-5D9D106E1A47/w1000/h732" alt="Product">
+          </div>
+          <div class="product-info">
+            <div class="badge-category">Monitors</div>
+            <h4 class="product-name">ASUS TUF Gaming 27"</h4>
+            <div class="product-rating">
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+            </div>
+            <div class="price-row">
+              <span class="price">$299.00</span>
+              <button class="btn-add"><i class='bx bx-plus'></i></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="promo-banner">
+      <div class="promo-text">
+        <h3>Build Your <span>Dream PC</span></h3>
+        <p>Get flat 20% off on all PC Components this week.</p>
+      </div>
+      <button class="btn-primary" style="background:white; color:var(--dark);">Check Deals</button>
+    </section>
+
+    <section class="section-padding" style="background-color: #f9f9f9;">
+      <h3 class="section-title">Top Brands</h3>
+      <div class="brands-container">
+        <div class="brand-logo"><i class='bx bxl-apple'></i> APPLE</div>
+        <div class="brand-logo"><i class='bx bxl-windows'></i> MICROSOFT</div>
+        <div class="brand-logo"><i class='bx bxl-android'></i> ANDROID</div>
+        <div class="brand-logo"><i class='bx bxl-google'></i> GOOGLE</div>
+        <div class="brand-logo"><i class='bx bxs-microchip'></i> INTEL</div>
+        <div class="brand-logo"><i class='bx bxl-nvidia'></i> NVIDIA</div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="logo" style="margin-bottom: 1rem;">GSG</div>
+          <p style="font-size: 0.9rem; line-height: 1.6;">
+            Your one-stop shop for the best computer accessories, peripherals, and gaming gear.
+          </p>
+          <div class="social-links">
+            <a href="#"><i class='bx bxl-facebook'></i></a>
+            <a href="#"><i class='bx bxl-twitter'></i></a>
+            <a href="#"><i class='bx bxl-instagram'></i></a>
+            <a href="#"><i class='bx bxl-youtube'></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Store Locations</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Customer Care</h4>
+          <ul>
+            <li><a href="#">My Account</a></li>
+            <li><a href="#">Track Order</a></li>
+            <li><a href="#">Returns & Exchanges</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contact Info</h4>
+          <ul>
+            <li><i class='bx bx-map'></i> 123 Tech Street, Digital City</li>
+            <li><i class='bx bx-phone'></i> +1 234 567 890</li>
+            <li><i class='bx bx-envelope'></i> support@leuze.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        &copy; 2026 Getset Gadgets Computer Accessories. All rights reserved.
+      </div>
+    </footer>
+
   </body>
 </html>

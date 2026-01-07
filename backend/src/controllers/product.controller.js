@@ -121,7 +121,9 @@ const getProductById = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid product ID format", MODULE);
   }
 
-  const product = await Product.findById(productId);
+  const product = await Product.findById(productId)
+    .populate("category", "name description")
+    .populate("brand", "name description ");
 
   if (!product) {
     throw new ApiError(404, "Product not found", MODULE);
@@ -134,4 +136,19 @@ const getProductById = asyncHandler(async (req, res) => {
     );
 });
 
-export { createProduct, editProduct, getProductById };
+const fetchAllProduct = asyncHandler(async (req, res) => {
+  
+  const allProducts = await Product.find()
+    .populate("category", "name description") 
+    .populate("brand", "name description "); 
+
+  if (allProducts.length === 0) {
+    return res.status(200).json(new ApiResponse(200, "No products found", []));
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, "Products fetched successfully", allProducts));
+});
+
+export { createProduct, editProduct, getProductById, fetchAllProduct };

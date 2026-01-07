@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GetSet Gadgets | Products</title>
+    <link rel="stylesheet" href="../styles/product.css" />
+    <link
+      href="https://cdn.boxicons.com/3.0.3/fonts/basic/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.boxicons.com/3.0.3/fonts/brands/boxicons-brands.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="header-container">
+      <div class="header-content">
+        <div class="logo">GSG</div>
+
+        <div class="search-container">
+          <input
+            type="text"
+            class="search-bar"
+            placeholder="What are you looking for?"
+          />
+          <button class="search-btn">
+            <i class="bxr bx-search search-icon" style="color: #ffffff"></i>
+          </button>
+        </div>
+
+        <div class="header-icons">
+          <div class="watch-list">
+            <i class="bxr bxs-bookmark watch-list-icon"></i>
+            <a href="#">
+              Watch list
+              <span class="badge">0</span>
+            </a>
+          </div>
+
+          <div class="compare">
+            <i class="bxr bxs-compare-alt compare-icon"></i>
+            <a href="#">
+              Comparison
+              <span class="badge">0</span>
+            </a>
+          </div>
+
+          <div class="cart">
+            <i class="bxr bxs-cart cart-icon"></i>
+            <a href="#">
+              Cart
+              <span class="badge">0</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-container">
+      <ul class="nav-menu">
+        <li><a href="/home">Home</a></li>
+        <li><a href="/products">All Products</a></li>
+        <li><a href="#">Categories</a></li>
+        <li><a href="#">Brands</a></li>
+      </ul>
+    </nav>
+
+    <div class="main-content">
+      <div class="product-header-top">
+        <h1>Explore Our Products</h1>
+        <p>Discover the latest gadgets and technology essentials for your lifestyle</p>
+      </div>
+
+      <div class="product-container" id="productContainer"></div>
+    </div>
+
+    <script src="../scripts/product.js"></script>
+  </body>
+</html>
