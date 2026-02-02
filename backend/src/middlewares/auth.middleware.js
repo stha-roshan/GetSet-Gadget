@@ -37,7 +37,7 @@ const verifyUser = async (req, res, next) => {
     }
 
     const user = await User.findById(decodedAccessToken?.id).select(
-      "-password -salt -phoneNumber -refreshToken"
+      "-password -salt -refreshToken"
     );
 
     if (!user) {

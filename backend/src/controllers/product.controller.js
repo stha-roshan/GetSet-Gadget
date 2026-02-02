@@ -17,7 +17,7 @@ const createProduct = asyncHandler(async (req, res) => {
       400,
       "Product Validation error",
       MODULE,
-      validation.errors
+      validation.errors,
     );
   }
 
@@ -46,7 +46,7 @@ const createProduct = asyncHandler(async (req, res) => {
   return res
     .status(201)
     .json(
-      new ApiResponse(201, "product created successfully", newProduct, MODULE)
+      new ApiResponse(201, "product created successfully", newProduct, MODULE),
     );
 });
 
@@ -65,7 +65,7 @@ const editProduct = asyncHandler(async (req, res) => {
       400,
       "Edit Product Validation error",
       MODULE,
-      validation.errors
+      validation.errors,
     );
   }
 
@@ -109,8 +109,8 @@ const editProduct = asyncHandler(async (req, res) => {
         200,
         "Product data updated successfully",
         updateProduct,
-        MODULE
-      )
+        MODULE,
+      ),
     );
 });
 
@@ -132,15 +132,14 @@ const getProductById = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, "Product fetched successfully", product, MODULE)
+      new ApiResponse(200, "Product fetched successfully", product, MODULE),
     );
 });
 
 const fetchAllProduct = asyncHandler(async (req, res) => {
-  
   const allProducts = await Product.find()
-    .populate("category", "name description") 
-    .populate("brand", "name description "); 
+    .populate("category", "name description")
+    .populate("brand", "name description ");
 
   if (allProducts.length === 0) {
     return res.status(200).json(new ApiResponse(200, "No products found", []));
@@ -151,4 +150,51 @@ const fetchAllProduct = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Products fetched successfully", allProducts));
 });
 
-export { createProduct, editProduct, getProductById, fetchAllProduct };
+const searchProducts = asyncHandler(async (req, res) => {
+  const { q, limit } = req.query;
+
+  // console.log("Received search query:", q);
+  // console.log("Limit:", limit);
+
+  if (!q || q.trim().length < 2) {
+    throw new ApiError(
+      400,
+      "Search query must be at least 2 characters long",
+      MODULE,
+    );
+  }
+
+  const searchQuery = q.trim();
+
+  const searchFilter = {
+    $or: [{ name: { $regex: searchQuery, $options: "i" } }],
+    stock: { $gt: 0 },
+  };
+
+  const suggestions = await Product.find(searchFilter)
+    .select("name category image price brand stock")
+    .populate("category", "name")
+    .limit(parseInt(limit) || 5);
+
+  if (!suggestions) {
+    throw new ApiError(500, "Error fetching search suggestions", MODULE);
+  }
+
+  if (suggestions.length === 0) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, "No matching products found", []));
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        "Search suggestions fetched successfully",
+        suggestions,
+      ),
+    );
+});
+
+export { createProduct, editProduct, getProductById, fetchAllProduct, searchProducts };

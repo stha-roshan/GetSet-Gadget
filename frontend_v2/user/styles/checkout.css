@@ -1,0 +1,434 @@
+:root {
+  --primary: #e30613;
+  --primary-hover: #c00510;
+  --dark: #333333;
+  --light-gray: #f8fafc;
+  --border: #cbd5e1;
+  --text-muted: #64748b;
+  --white: #ffffff;
+  --error: #dc2626;
+  --success: #16a34a;
+  --accent-light: #fff5f5;
+}
+
+/* 
+  Removed * reset here — it conflicts with your reset.css 
+  Let reset.css handle margin, padding, box-sizing globally.
+*/
+
+body {
+  background-color: var(--light-gray);
+  justify-content: center;
+  min-height: 100vh;
+  /* padding: 40px 20px; */
+  font-family: "Segoe UI", system-ui, sans-serif;
+  /* 
+    Moved font-family here from * selector 
+    so it applies to body and inherits down naturally.
+  */
+}
+
+/* ===== CHECKOUT LAYOUT ===== */
+
+.checkout-container {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2.5rem;
+  max-width: 1100px;
+  width: 100%;
+  margin: 50px auto;
+  /* Added margin auto — without it the grid wasn't centering 
+     because body doesn't have display:flex active (it's commented out).
+  */
+}
+
+/* ===== LEFT SECTION — FORM ===== */
+
+.checkout-form {
+  background: var(--white);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.section-title {
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  color: var(--dark);
+}
+
+.form-group {
+  margin-bottom: 2.5rem;
+}
+
+.form-group h3 {
+  margin-bottom: 0.5rem;
+  color: var(--dark);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 
+  Scoped h3 styles under .form-group 
+  so it doesn't accidentally style h3 tags elsewhere 
+  (like the Order Summary h3).
+*/
+
+.form-group h3 i {
+  color: var(--primary);
+}
+
+.form-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+/* ===== INPUTS ===== */
+
+.input-row {
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+
+.input-row label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--dark);
+}
+
+/* 
+  Scoped label under .input-row 
+  so it doesn't conflict with other labels if any exist.
+*/
+
+.input-row.split {
+  display: flex;
+  gap: 1rem;
+}
+
+.input-row.split .half {
+  flex: 1;
+}
+
+.input-row input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  /* Added font-family inherit — inputs don't inherit font by default */
+  transition: all 0.2s;
+  background: var(--white);
+}
+
+.input-row input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.1);
+}
+
+.input-row input:invalid:not(:placeholder-shown) {
+  border-color: var(--error);
+}
+
+.input-row input:valid:not(:placeholder-shown) {
+  border-color: var(--success);
+}
+
+/* ===== ERROR MESSAGES ===== */
+
+.error-message {
+  display: block;
+  color: var(--error);
+  font-size: 0.8rem;
+  margin-top: 4px;
+  min-height: 1rem;
+}
+
+/* ===== PAYMENT METHOD BUTTONS ===== */
+
+.payment-options {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.pay-btn {
+  flex: 1;
+  padding: 12px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-family: inherit;
+  /* Added font-family inherit — buttons don't inherit font by default */
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pay-btn:hover {
+  border-color: var(--primary);
+  background-color: var(--accent-light);
+}
+
+.pay-btn.active {
+  border-color: var(--primary);
+  /* Changed from --border to --primary — active state should visually stand out */
+  background-color: var(--accent-light);
+  color: var(--dark);
+}
+
+/* ===== PAY NOW / CONFIRM BUTTON ===== */
+
+.confirm-btn {
+  width: 100%;
+  padding: 16px;
+  background-color: var(--dark);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  font-family: inherit;
+  /* Added font-family inherit */
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 0.5rem;
+  /* Added slight top margin for breathing room above the button */
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(227, 6, 19, 0.3);
+}
+
+.confirm-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.confirm-btn:disabled {
+  background-color: var(--border);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ===== RIGHT SECTION — ORDER SUMMARY ===== */
+
+.order-summary {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  height: fit-content;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 20px;
+  border-top: 3px solid var(--dark);
+}
+
+.order-summary > h3 {
+  color: var(--dark);
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  /* 
+    Used > h3 (direct child) so this only targets 
+    the Order Summary heading, not h3 inside .form-group.
+  */
+}
+
+/* ===== PRODUCT CARD (inside summary) ===== */
+
+.product-card {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.product-image {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--light-gray);
+}
+
+.product-image .badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--primary);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+/* 
+  Scoped .badge under .product-image 
+  so it doesn't conflict with the header cart badge 
+  (which comes from header_footer_util.css).
+*/
+
+.product-details {
+  min-width: 0;
+  flex: 1;
+}
+
+.product-details h4 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  color: var(--dark);
+}
+
+.product-details .description {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+  max-height: calc(1.4em * 2);
+}
+
+.product-details .price {
+  font-weight: bold;
+  color: var(--primary);
+  margin-top: 5px;
+  font-size: 1.05rem;
+}
+
+/* 
+  Scoped .description and .price under .product-details 
+  so they only apply inside the order summary card.
+*/
+
+/* ===== DIVIDER ===== */
+
+.order-summary hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+/* Scoped hr under .order-summary to avoid affecting other hrs */
+
+/* ===== TOTALS ===== */
+
+.totals .total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.totals .total-row.final {
+  color: var(--dark);
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--dark);
+}
+
+.totals .total-row.final span:last-child {
+  color: var(--primary);
+}
+
+/* ===== TRUST BADGES ===== */
+
+.trust-badges {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.trust-badges p {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.trust-badges p i {
+  color: var(--primary);
+}
+
+/* ===== LOADING STATE ===== */
+
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 850px) {
+  .checkout-container {
+    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .order-summary {
+    position: static;
+    margin-bottom: 1rem;
+  }
+
+  body {
+    padding: 20px 15px;
+  }
+
+  .checkout-form {
+    padding: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .input-row.split {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .product-image {
+    width: 60px;
+    height: 60px;
+  }
+}

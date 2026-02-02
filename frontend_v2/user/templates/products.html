@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/reset.css" />
+  <link rel="stylesheet" href="../styles/header_footer_util.css" />
+  <link rel="stylesheet" href="../styles/products.css" />
+</head>
+
+<body>
+  <div class="header-container">
+    <div class="header-bar">
+      <div class="logo">
+        <img src="" alt="Logo Placeholder" />
+      </div>
+
+      <div class="search-wrapper">
+        <div class="search">
+          <i class="bx bx-search search-icon-visual"></i>
+          <input type="text" class="search-input" id="searchInput" placeholder="Search mouse, keyboard..." />
+          <button class="search-button" id="searchButton">Search</button>
+        </div>
+
+        <div class="search-suggestions" id="suggestionsContainer"></div>
+      </div>
+
+      <div class="header-icons">
+        <div class="utility-icons">
+          <div class="cart icon-btn" title="View Cart" onclick="window.location.href = '/my-cart'">
+            <i class="bx bx-cart"></i>
+            <span class="badge"></span>
+          </div>
+          <div class="orders icon-btn" title="My Orders">
+            <i class='bx bx-shopping-bag'></i>
+          </div>
+        </div>
+
+        <div class="user-dropdown-container">
+          <div class="user icon-btn" id="userIcon" title="My Account">
+            <i class="bx bx-user-circle"></i>
+          </div>
+
+          <div class="dropdown-menu" id="userDropdown">
+            <!-- <a href="" class="dropdown-item">login</a>
+                   <a href="" class="dropdown-item">Register</a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <ul class="nav-links">
+        <li><a href="/home">Home</a></li>
+        <li><a href="#">Categories</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Support</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <aside class="sidebar">
+      <div class="filter-group" id="categoryFilter">
+        <h3>Categories</h3>
+        <!-- <label class="filter-item"><input type="checkbox" />Keyboards</label> -->
+      </div>
+
+      <div class="filter-group" id="brandFilter">
+        <h3>Brands</h3>
+        <!-- <label class="filter-item"
+            ><input type="checkbox" /> Logitech G</label
+          > -->
+      </div>
+    </aside>
+
+    <main>
+      <div class="toolbar">
+        <p>Showing <strong id="countElement">12</strong> products</p>
+        <select class="sort-select">
+          <option>Sort by: Newest</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+        </select>
+      </div>
+
+      <div class="products-grid" id="productContainer">
+        <!-- <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://m.media-amazon.com/images/I/71yULbWE8KL._SX522_.jpg" alt="" />
+                    </div>
+                    <div class="product-info">
+                        <div class="badge-category">Audio</div>
+                        <h4 class="product-name">Corsair HS80 Wireless</h4>
+                        <div class="price-row">
+                            <span class="price">$129.99</span>
+                            <button class="btn-view-details" title="View detail">
+                                <i class="bx bx-right-arrow-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div> -->
+
+        <!-- <div class="error-message">
+                    <i class="bx bx-error-circle" style="font-size: 48px; color: #e30613;"></i>
+                    <h3>Unable to Load Products</h3>
+                    <p>message</p>
+                </div> -->
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-col">
+        <h4>Getset Gadget</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Customer Service</h4>
+        <ul>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Refund and Returns</a></li>
+          <li><a href="#">Safe & Secure Shopping</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Service Hours</h4>
+        <ul>
+          <li style="color: #999; font-size: 0.85rem">
+            11:00 AM to 6:00 PM (NST)
+          </li>
+          <li style="margin-top: 15px">HOTLINE</li>
+          <li style="color: var(--primary); font-weight: bold">015348976</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div style="font-size: 0.8rem; color: #666">
+        &copy; 2026 Getset Gadgets Computer Accessories. All rights reserved.
+      </div>
+    </div>
+  </footer>
+  <script src="../scripts/header_footer_util.js"></script>
+  <script src="../scripts/products.js"></script>
+</body>
+
+</html>

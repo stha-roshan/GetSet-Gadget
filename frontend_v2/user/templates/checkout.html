@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secure Checkout</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/reset.css">
+  <link rel="stylesheet" href="../styles/header_footer_util.css">
+  <link rel="stylesheet" href="../styles/checkout.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+
+<body>
+  <div class="header-container">
+    <div class="header-bar">
+      <div class="logo">
+        <img src="" alt="Logo Placeholder" />
+      </div>
+
+      <div class="search-wrapper">
+        <div class="search">
+          <i class="bx bx-search search-icon-visual"></i>
+          <input type="text" class="search-input" id="searchInput" placeholder="Search mouse, keyboard..." />
+          <button class="search-button" id="searchButton">Search</button>
+        </div>
+        <div class="search-suggestions" id="suggestionsContainer"></div>
+      </div>
+
+      <div class="header-icons">
+        <div class="utility-icons">
+          <div class="cart icon-btn" title="View Cart" onclick="window.location.href = '/my-cart'">
+            <i class="bx bx-cart"></i>
+            <span class="badge"></span>
+          </div>
+          <div class="orders icon-btn" title="My Orders">
+            <i class='bx bx-shopping-bag'></i>
+          </div>
+        </div>
+
+        <div class="user-dropdown-container">
+          <div class="user icon-btn" id="userIcon" title="My Account">
+            <i class="bx bx-user-circle"></i>
+          </div>
+          <div class="dropdown-menu" id="userDropdown"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <ul class="nav-links">
+        <li><a href="/home">Home</a></li>
+        <li><a href="#">Categories</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Support</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CHECKOUT -->
+  <div class="checkout-container">
+
+    <!-- LEFT: Form -->
+    <div class="checkout-form">
+      <h2 class="section-title">Checkout</h2>
+
+      <div id="checkout-form">
+
+        <!-- Contact Info -->
+        <div class="form-group">
+          <h3><i class="fas fa-envelope"></i> Contact Info</h3>
+          <!-- <p class="form-hint">We'll send the receipt and tracking code here.</p> -->
+
+          <div class="input-row">
+            <label for="email">Your Email *</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" />
+            <span class="error-message" id="email-error"></span>
+          </div>
+
+          <div class="input-row">
+            <label for="phone">Your Phone <p class="form-hint" style="display: inline;">(Optional)</p></label>
+            <input type="tel" id="phone" name="phone" placeholder="9876543210" autocomplete="tel" />
+            <span class="error-message" id="phone-error"></span>
+          </div>
+        </div>
+
+        <!-- Shipping Address -->
+        <div class="form-group">
+          <h3><i class="fas fa-truck"></i> Shipping Address</h3>
+          <p class="form-hint">Where should we deliver this package?</p>
+
+          <div class="input-row">
+            <label for="recipient-name">Recipient's Full Name *</label>
+            <input type="text" id="recipient-name" name="recipient-name" placeholder="e.g. John Doe" autocomplete="name" />
+            <span class="error-message" id="name-error"></span>
+          </div>
+
+          <div class="input-row">
+            <label for="address">Address *</label>
+            <input type="text" id="address" name="address" placeholder="123 Main Street, Apt 4B" autocomplete="street-address" />
+            <span class="error-message" id="address-error"></span>
+          </div>
+
+          <div class="input-row split">
+            <div class="half">
+              <label for="city">City *</label>
+              <input type="text" id="city" name="city" placeholder="Kathmandu" autocomplete="address-level2" />
+              <span class="error-message" id="city-error"></span>
+            </div>
+            <div class="half">
+              <label for="zip">Zip Code *</label>
+              <input type="text" id="zip" name="zip" placeholder="44600" autocomplete="postal-code" />
+              <span class="error-message" id="zip-error"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="form-group">
+          <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+          <div class="payment-options">
+            <button type="button" class="pay-btn active" data-method="esewa" onclick="selectPayment(this)">
+              <i class="fas fa-wallet"></i> eSewa
+            </button>
+          </div>
+        </div>
+
+        <!-- Pay Now Button -->
+        <button type="button" class="confirm-btn" id="pay-button" onclick="handlePayment()">
+          <i class="fas fa-lock"></i> Pay Now
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Order Summary -->
+    <div class="order-summary">
+      <h3>Order Summary</h3>
+
+      <div class="product-card" id="product-card">
+        <div class="product-image">
+          <img id="img" src="" alt="Product image" />
+          <!-- This badge shows the quantity the user selected -->
+          <span class="badge" id="qty-badge">1</span>
+        </div>
+        <div class="product-details">
+          <h4 id="title">Loading...</h4>
+          <p class="description" id="description">Please wait...</p>
+          <!-- This shows: unit price x quantity -->
+          <p class="price" id="price-unit" style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">रु 0.00 x 1</p>
+          <!-- This shows the line total (price x qty) -->
+          <p class="price" id="price">रु 0.00</p>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="totals">
+        <div class="total-row">
+          <span>Subtotal (<span id="qty-text">1</span> item)</span>
+          <span id="subtotal">रु 0.00</span>
+        </div>
+        <div class="total-row">
+          <span>Shipping</span>
+          <span id="shipping">रु 0.00</span>
+        </div>
+        <div class="total-row">
+          <span>Tax (13%)</span>
+          <span id="tax">रु 0.00</span>
+        </div>
+        <div class="total-row final">
+          <span>Total</span>
+          <span id="total">रु 0.00</span>
+        </div>
+      </div>
+
+      <div class="trust-badges">
+        <p><i class="fas fa-lock"></i> SSL Encrypted Payment</p>
+        <p><i class="fas fa-shield-alt"></i> Secure Checkout</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../scripts/header_footer_util.js"></script>
+  <script src="../scripts/checkout.js"></script>
+</body>
+
+</html>

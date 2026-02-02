@@ -1,0 +1,80 @@
+/* ================================
+   Modern CSS Reset (Icon-Safe)
+   ================================ */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Root behavior */
+html {
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+/* Base typography */
+body {
+    min-height: 100vh;
+    line-height: 1.5;
+    font-family: "Segoe UI", Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    background-color: #f8fafc;
+    /* display: flex;
+    flex-direction: column; */
+}
+
+/* Lists */
+ul,
+ol {
+    list-style: none;
+}
+
+/* Links */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Images & media */
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+/* Form elements */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+    border: none;
+    outline: none;
+    background: none;
+}
+
+/* Buttons */
+button {
+    cursor: pointer;
+}
+
+/* Table cleanup */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Prevent icon fonts from breaking */
+i,
+[class^="bx"],
+[class*=" bx"] {
+    font-style: normal;
+}
