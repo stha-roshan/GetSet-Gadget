@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { buildProductValidation } from "../utils/productValidator.js";
 import { validateFields } from "../utils/validatorFunctions.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import mongoose from "mongoose";
 
 const MODULE = "[PRODUCT] [product.controller.js]";
 
@@ -197,4 +198,36 @@ const searchProducts = asyncHandler(async (req, res) => {
     );
 });
 
-export { createProduct, editProduct, getProductById, fetchAllProduct, searchProducts };
+const getSimilarProducts = asyncHandler(async (req, res) => {
+  const { categoryId, excludeId, limit = 6 } = req.query;
+
+  // Validation
+  if (!categoryId) {
+    return res.status(400).json(
+      new ApiResponse(400, "Category ID is required", null)
+    );
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+    return res.status(400).json(
+      new ApiResponse(400, "Invalid category ID format", null)
+    );
+  }
+
+  const query = { category: categoryId };
+  
+  if (excludeId && mongoose.Types.ObjectId.isValid(excludeId)) {
+    query._id = { $ne: excludeId };
+  }
+
+  const similarProducts = await Product.find(query)
+    .populate("category", "name")
+    .populate("brand", "name")
+    .limit(parseInt(limit));
+  
+  return res.status(200).json(
+    new ApiResponse(200, "Similar products fetched successfully", similarProducts)
+  );
+});
+
+export { createProduct, editProduct, getProductById, fetchAllProduct, searchProducts, getSimilarProducts };

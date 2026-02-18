@@ -6,10 +6,10 @@ const __dirname = import.meta.dirname;
 
 // ############### Dashboard ###############
 
-router.get("/", (req, res) => {
+router.get("/dashboard", (req, res) => {
   const pagePath = path.join(
     __dirname,
-    "../../../frontend/templetes/dashboard.html"
+    "../../../frontend_v2/admin/templates/admin_dashboard.html"
   );
   res.sendFile(pagePath);
 });
@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 router.get("/product-management", (req, res) => {
   const pagePath = path.join(
     __dirname,
-    "../../../frontend/templetes/product_management.html"
+    "../../../frontend_v2/admin/templates/product_management.html"
   );
   res.sendFile(pagePath);
 });
@@ -32,6 +32,22 @@ router.get("/create-product", (req, res) => {
   res.sendFile(pagePath);
 });
 
+// ############### order management ###############
+router.get("/order-management", (req, res) => {
+  const pagePath = path.join(
+    __dirname,
+    "../../../frontend_v2/admin/templates/order_management.html"
+  );
+  res.sendFile(pagePath);
+});
+
+router.get("/order-detail", (req, res) => {
+  const pagePath = path.join(
+    __dirname,
+    "../../../frontend_v2/admin/templates/order_detail.html"
+  );
+  res.sendFile(pagePath);
+});
 
 // ############### category management ###############
 

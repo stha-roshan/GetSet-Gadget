@@ -10,38 +10,86 @@ logoImg.onload = () => {
 logoImg.src = logoUrl;
 logoImg.alt = "Getset Gadgets";
 
-// user icon clicked --> dropdown menu
-const loinBtn = document.createElement("a");
-loinBtn.href = "/login";
-loinBtn.className = "dropdown-item";
-loinBtn.textContent = "Login";
+function getTokenFromCookie() {
+    return localStorage.getItem("accessToken");
+}
 
-const registerBtn = document.createElement("a");
-registerBtn.href = "/signup";
-registerBtn.className = "dropdown-item";
-registerBtn.textContent = "Register";
-
-
+// ============================================
+// USER DROPDOWN LOGIC (Dynamic)
+// ============================================
 const dropdownMenu = document.querySelector(".dropdown-menu");
-dropdownMenu.appendChild(loinBtn);
-dropdownMenu.appendChild(registerBtn);
 
+// Clear existing items just in case
+dropdownMenu.innerHTML = "";
+
+const token = getTokenFromCookie();
+
+if (token) {
+  // --- SCENARIO 1: USER IS LOGGED IN ---
+  
+  // 1. My Account Button
+  const accountBtn = document.createElement("a");
+  accountBtn.href = "/profile"; // Adjust this URL if your profile page is different
+  accountBtn.className = "dropdown-item";
+  accountBtn.textContent = "Profile  Settings";
+
+  // 2. Logout Button
+  const logoutBtn = document.createElement("a");
+  logoutBtn.href = "#";
+  logoutBtn.className = "dropdown-item";
+  logoutBtn.textContent = "Logout";
+  
+  // Logout Logic
+  logoutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    localStorage.removeItem("accessToken"); // Remove token
+    // Optional: Remove other user data if stored
+    // localStorage.removeItem("user"); 
+    setInterval(() => {
+      window.location.href = "/login"; // Redirect to login or home
+    }, 1000);
+  });
+
+  dropdownMenu.appendChild(accountBtn);
+  dropdownMenu.appendChild(logoutBtn);
+
+} else {
+  // --- SCENARIO 2: USER IS NOT LOGGED IN (Original Logic) ---
+
+  // 1. Login Button
+  const loginBtn = document.createElement("a");
+  loginBtn.href = "/login";
+  loginBtn.className = "dropdown-item";
+  loginBtn.textContent = "Login";
+
+  // 2. Register Button
+  const registerBtn = document.createElement("a");
+  registerBtn.href = "/signup";
+  registerBtn.className = "dropdown-item";
+  registerBtn.textContent = "Register";
+
+  dropdownMenu.appendChild(loginBtn);
+  dropdownMenu.appendChild(registerBtn);
+}
+
+// Event Listeners for Toggling (Kept the same)
 document.addEventListener("DOMContentLoaded", () => {
   const userIcon = document.getElementById("userIcon");
   const userDropdown = document.getElementById("userDropdown");
 
-  userIcon.addEventListener("click", (e) => {
-    e.stopPropagation();
-    userDropdown.classList.toggle("active");
-  });
+  if (userIcon && userDropdown) {
+    userIcon.addEventListener("click", (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle("active");
+    });
 
-  document.addEventListener("click", (e) => {
-    if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-      userDropdown.classList.remove("active");
-    }
-  });
+    document.addEventListener("click", (e) => {
+      if (!userDropdown.contains(e.target) && e.target !== userIcon) {
+        userDropdown.classList.remove("active");
+      }
+    });
+  }
 });
-
 // ============================================
 // SEARCH SUGGESTIONS
 // ============================================
@@ -152,10 +200,6 @@ document.addEventListener("keydown", (e) => {
     hideSuggestions();
   }
 });
-
-function getTokenFromCookie() {
-    return localStorage.getItem("accessToken");
-}
 
 async function updateCartBadge() {
     try {

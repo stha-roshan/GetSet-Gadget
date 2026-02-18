@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../styles/reset_admin.css">
+    <link rel="stylesheet" href="../styles/admin_bar.css">
+    <link rel="stylesheet" href="../styles/order_detail.css">
+</head>
+
+<body>
+
+    <aside id="sidebar" class="sidebar">
+        <div class="logo">
+            <img src="" alt="">
+        </div>
+
+        <nav>
+
+            <a href="/admin/dashboard" class="nav-link">
+                <i class='bx bxs-dashboard'></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="/admin/order-management" class="nav-link active">
+                <i class='bx bx-shopping-bag'></i>
+                <span>Order Management</span>
+            </a>
+
+            <a href="/admin/product-management" class="nav-link">
+                <i class='bx bx-package'></i>
+                <span>Product Management</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class='bx bx-purchase-tag'></i>
+                <span>Category Management</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class='bx bx-bulb'></i>
+                <span>Brand Management</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class='bx bxs-user-detail'></i>
+                <span>User Management</span>
+            </a>
+
+        </nav>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <a href="/admin/order-management" class="back-link">
+                <i class='bx bx-arrow-back'></i> Back to Orders
+            </a>
+            <div class="order-header-info">
+                <div class="header-left">
+                    <h1 id="orderNumber" class="order-number">Loading...</h1>
+                    <p id="orderDate" class="order-date"></p>
+                </div>
+                <div class="header-right">
+                    <span id="headerStatusBadge" class="status-badge"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading order details...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display: none;">
+            <i class='bx bx-error-circle'></i>
+            <p id="errorMessage">Failed to load order details</p>
+            <a href="/admin/order-management" class="btn-back">Back to Orders</a>
+        </div>
+
+        <!-- Order Content -->
+        <div id="orderContent" class="order-content" style="display: none;">
+            
+            <!-- Order Information (3-column) -->
+            <section class="info-section">
+                <div class="info-grid">
+                    <div class="info-column">
+                        <div class="column-header">
+                            <i class='bx bx-user-circle'></i>
+                            <span>CUSTOMER</span>
+                        </div>
+                        <div class="column-content">
+                            <p class="info-value" id="customerName">-</p>
+                            <p class="info-sub" id="customerEmail">-</p>
+                            <p class="info-sub" id="customerPhone">-</p>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="column-header">
+                            <i class='bx bx-map'></i>
+                            <span>SHIPPING TO</span>
+                        </div>
+                        <div class="column-content">
+                            <p class="info-value" id="shippingAddress">-</p>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="column-header">
+                            <i class='bx bx-credit-card'></i>
+                            <span>PAYMENT</span>
+                        </div>
+                        <div class="column-content">
+                            <p class="info-value" id="paymentMethod">-</p>
+                            <p class="info-sub"><span id="paymentStatus" class="status-badge-small"></span></p>
+                            <p class="info-sub transaction-id" id="transactionId">-</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Order Status & Tracking -->
+            <section class="status-section">
+                <div class="status-content">
+                    <div class="status-left">
+                        <div class="section-label">
+                            <i class='bx bx-package'></i>
+                            <span>ORDER STATUS</span>
+                        </div>
+                        <div class="current-status">
+                            <span class="label-text">Current Status:</span>
+                            <span id="orderStatus" class="status-badge"></span>
+                        </div>
+                    </div>
+                    <div class="status-right">
+                        <select id="statusSelect" class="status-select">
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <button id="updateStatusBtn" class="btn-update">
+                            <i class='bx bx-refresh'></i>
+                            Update Status
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Items Ordered -->
+            <section class="items-section">
+                <div class="section-header">
+                    <i class='bx bx-cart'></i>
+                    <span>ITEMS ORDERED</span>
+                </div>
+                <div class="items-table-wrapper">
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-right">Unit Price</th>
+                                <th class="text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            <!-- Items will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Order Summary -->
+            <section class="summary-section">
+                <div class="summary-box">
+                    <div class="section-header">
+                        <i class='bx bx-receipt'></i>
+                        <span>ORDER SUMMARY</span>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-row">
+                            <span class="summary-label">Subtotal:</span>
+                            <span class="summary-value" id="subtotal">Rs. 0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Tax (13%):</span>
+                            <span class="summary-value" id="tax">Rs. 0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Shipping Cost:</span>
+                            <span class="summary-value" id="shippingCost">Rs. 0</span>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row total-row">
+                            <span class="summary-label">Total Amount:</span>
+                            <span class="summary-value" id="totalAmount">Rs. 0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer Timestamps -->
+            <div class="order-footer">
+                <span>Order placed: <strong id="createdAt">-</strong></span>
+                <span class="divider">|</span>
+                <span>Last updated: <strong id="updatedAt">-</strong></span>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Success Notification -->
+    <div id="successNotification" class="notification success" style="display: none;">
+        <i class='bx bx-check-circle'></i>
+        <span id="successMessage">Status updated successfully!</span>
+    </div>
+
+    <!-- Error Notification -->
+    <div id="errorNotification" class="notification error" style="display: none;">
+        <i class='bx bx-error-circle'></i>
+        <span id="errorNotificationMessage">Failed to update status</span>
+    </div>
+
+    <script src="../scripts/admin_bar.js"></script>
+    <script src="../scripts/order_detail.js"></script>
+</body>
+
+</html>

@@ -6,6 +6,7 @@ import {
   getProductById,
   fetchAllProduct,
   searchProducts,
+  getSimilarProducts,
 } from "../controllers/product.controller.js";
 import path from "path";
 
@@ -53,6 +54,7 @@ router.patch("/edit/:productId", upload.single("image"), editProduct);
 
 router.get("/fetchAll", fetchAllProduct)
 router.get("/search", searchProducts);
+router.get("/similar", getSimilarProducts);
 router.get("/:productId", getProductById);
 
 export default router;

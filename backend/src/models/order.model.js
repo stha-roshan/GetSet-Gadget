@@ -6,12 +6,11 @@ const orderSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        // Example: "ORD-1738500000-123"
     },
 
     status: {
         type: String,
-        enum: ["pending", "paid", "confirmed", "shipped", "delivered", "cancelled"],
+        enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
         default: "pending",
     },
 
@@ -37,7 +36,6 @@ const orderSchema = new Schema({
     customerPhone: {
         type: String,
         trim: true,
-        // Optional — some users might not provide phone
     },
 
     items: [
@@ -51,26 +49,22 @@ const orderSchema = new Schema({
             name: {
                 type: String,
                 required: true,
-                // Product name at time of purchase
             },
 
             image: {
                 type: String,
-                // Product image URL at time of purchase
             },
 
             price: {
                 type: Number,
                 required: true,
                 min: 0,
-                // Price per unit at time of purchase
             },
 
             quantity: {
                 type: Number,
                 required: true,
                 min: 1,
-                // How many units ordered
             },
         },
     ],
@@ -105,28 +99,24 @@ const orderSchema = new Schema({
         type: Number,
         required: true,
         min: 0,
-        // Sum of all items (price × quantity)
     },
 
     tax: {
         type: Number,
         default: 0,
         min: 0,
-        // VAT or sales tax (13% in Nepal)
     },
 
     shippingCost: {
         type: Number,
         default: 0,
         min: 0,
-        // Delivery charge
     },
 
     totalAmount: {
         type: Number,
         required: true,
         min: 0,
-        // subtotal + tax + shippingCost - discount
     },
 
     payment: {
@@ -150,8 +140,7 @@ const orderSchema = new Schema({
         transactionUuid: {
             type: String,
             unique: true,
-            sparse: true, // allows null values but ensures uniqueness when present
-            // Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+            sparse: true, 
         },
 
         // eSewa's transaction ID (returned after successful payment)
@@ -172,11 +161,11 @@ const orderSchema = new Schema({
         },
     },
 
-    deliveryStatus: {
-        type: String,
-        enum: ["not_shipped", "in_transit", "out_for_delivery", "delivered"],
-        default: "not_shipped",
-    },
+    // deliveryStatus: {
+    //     type: String,
+    //     enum: ["not_shipped", "in_transit", "out_for_delivery", "delivered"],
+    //     default: "not_shipped",
+    // },
 }, { timestamps: true });
 
 const Order = mongoose.model("Order", orderSchema);

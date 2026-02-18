@@ -1,0 +1,340 @@
+/* Dashboard Container */
+.dashboard-container {
+  padding: 1.5rem 3rem;
+}
+
+/* Metrics Grid - 4 Columns */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Individual Metric Card */
+.metric-card {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #edf2f7;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Icons Styling */
+.metric-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+/* Icon Colors */
+.icon-red {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.icon-blue {
+  background-color: #dbeafe;
+  color: #3b82f6;
+}
+
+.icon-green {
+  background-color: #dcfce7;
+  color: #22c55e;
+}
+
+.icon-purple {
+  background-color: #f3e8ff;
+  color: #a855f7;
+}
+
+/* Text Styling */
+.metric-label {
+  font-family: "DM Sans", sans-serif;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.metric-value {
+  font-family: "Sora", sans-serif;
+  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.revenue-dropdown-container {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 1.5rem;
+}
+
+.revenue-dropdown-btn {
+  position: relative;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: #1e293b;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.revenue-dropdown-btn:hover {
+  background: #fff;
+  border-color: #ef4444;
+  box-shadow: 0 5px 15px rgba(220, 38, 38, 0.15);
+  transform: scale(1.1);
+}
+
+/* Dropdown Menu */
+.revenue-dropdown-menu {
+  position: absolute;
+  top: 105%;
+  right: 3rem;
+  width: 200px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.revenue-dropdown-menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Dropdown Items */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #1e293b;
+  font-size: 0.95rem;
+  font-family: "DM Sans", sans-serif;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.dropdown-item i {
+  font-size: 1.2rem;
+  color: #64748b;
+}
+
+.dropdown-item:hover {
+  background-color: #f9f9f9;
+  color: #ef4444;
+}
+
+.dropdown-item:hover i {
+  color: #ef4444;
+}
+
+/* Triangle Arrow at Top */
+.revenue-dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 14px;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  transform: rotate(45deg);
+  border-left: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ========================================
+   CHART SECTIONS
+   ======================================== */
+
+.chart-section {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid #edf2f7;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  margin-top: 2rem;
+}
+
+.chart-header {
+  font-family: "Sora", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+}
+
+.chart-container {
+  position: relative;
+  height: 400px;
+  width: 100%;
+}
+
+/* ========================================
+   INFO BANNER SECTIONS
+   ======================================== */
+
+.info-banner {
+  background: #ffffff;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  margin: 2.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border: 1px solid #edf2f7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.09);
+}
+
+.info-banner-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+/* Icon color based on trend */
+.info-banner[data-trend="up"] .info-banner-icon {
+  background-color: #dbeafe;
+  color: #3b82f6;
+}
+
+.info-banner[data-trend="down"] .info-banner-icon {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.info-banner-content {
+  flex: 1;
+}
+
+.info-banner-title {
+  font-family: "Sora", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.info-banner-text {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* Strong tag color based on trend */
+.info-banner[data-trend="up"] .info-banner-text strong {
+  font-weight: 700;
+  color: #3b82f6; /* Green for increase */
+}
+
+.info-banner[data-trend="down"] .info-banner-text strong {
+  font-weight: 700;
+  color: #ef4444; /* Red for decrease */
+}
+
+/* ========================================
+   SECTION DIVIDER
+   ======================================== */
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  margin: 3rem 0 2.5rem;
+}
+
+.section-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+}
+
+.section-divider-text {
+  padding: 0 1.5rem;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ========================================
+   CHARTS GRID - Bar and Pie Side by Side
+   ======================================== */
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Responsive chart adjustments */
+@media (max-width: 1024px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    height: 300px;
+  }
+  
+  .info-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-section {
+    padding: 1.5rem;
+  }
+  
+  .chart-container {
+    height: 250px;
+  }
+}

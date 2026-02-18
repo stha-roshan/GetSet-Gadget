@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/reset_admin.css" />
+    <link rel="stylesheet" href="../styles/admin_bar.css" />
+    <link rel="stylesheet" href="../styles/dashboard.css" />
+  </head>
+
+  <body>
+    <aside id="sidebar" class="sidebar">
+      <div class="logo">
+        <img src="" alt="" />
+      </div>
+
+      <nav>
+        <a href="/admin/dashboard" class="nav-link active">
+          <i class="bx bxs-dashboard"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="/admin/order-management" class="nav-link">
+          <i class="bx bx-shopping-bag"></i>
+          <span>Order Management</span>
+        </a>
+
+        <a href="/admin/product-management" class="nav-link">
+          <i class="bx bx-package"></i>
+          <span>Product Management</span>
+        </a>
+
+        <a href="#" class="nav-link">
+          <i class="bx bx-purchase-tag"></i>
+          <span>Category Management</span>
+        </a>
+
+        <a href="#" class="nav-link">
+          <i class="bx bx-bulb"></i>
+          <span>Brand Management</span>
+        </a>
+
+        <a href="#" class="nav-link">
+          <i class="bx bxs-user-detail"></i>
+          <span>User Management</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+      <header class="header">
+        <h2>Dashboard Overview</h2>
+      </header>
+
+      <div class="dashboard-container">
+        <div class="metrics-grid">
+
+          <div class="metric-card">
+            <div class="metric-icon icon-red">
+              <i class="bx bx-dollar-circle" style="font-size: 24px"></i>
+            </div>
+            <div class="metric-label" id="revenueLabel">Total Revenue</div>
+            <div class="revenue-dropdown-container">
+              <div class="metric-value" id="revenueValue">Rs. 4,50,000</div>
+
+              <button
+                class="revenue-dropdown-btn icon-btn"
+                id="revenueDropdownBtn"
+              >
+                <i class="bx bx-chevron-down"></i>
+              </button>
+              <div class="revenue-dropdown-menu" id="revenueDropdownMenu">
+                <a href="#" class="dropdown-item" data-filter="all">
+                  <i class="bx bx-infinite"></i>
+                  <span>Total Revenue</span>
+                </a>
+                <a href="#" class="dropdown-item" data-filter="today">
+                  <i class="bx bx-calendar-check"></i>
+                  <span>Revenue Today</span>
+                </a>
+                <a href="#" class="dropdown-item" data-filter="month">
+                  <i class="bx bx-calendar"></i>
+                  <span>Revenue This Month</span>
+                </a>
+                <a href="#" class="dropdown-item" data-filter="year">
+                  <i class="bx bx-calendar-event"></i>
+                  <span>Revenue This Year</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon icon-blue">
+              <i class="bx bx-time-five" style="font-size: 24px"></i>
+            </div>
+            <div class="metric-label">Pending Orders</div>
+            <div class="metric-value" id="pendingOrdersCount"></div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon icon-green">
+              <i class="bx bx-package" style="font-size: 24px"></i>
+            </div>
+            <div class="metric-label">Total Products</div>
+            <div class="metric-value" id="totalProductsCount"></div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon icon-purple">
+              <i class="bx bx-user-plus" style="font-size: 24px"></i>
+            </div>
+            <div class="metric-label">New Users Today</div>
+            <div class="metric-value">8</div>
+          </div>
+        </div>
+
+        <!-- Revenue Chart Section -->
+        <div class="chart-section">
+          <h3 class="chart-header">Revenue Generated - Last 7 Days</h3>
+          <div class="chart-container">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Info Banner - Weekly Performance -->
+        <div class="info-banner" data-trend="up" id="weeklyPerformanceBanner">
+          <div class="info-banner-icon">
+            <i class='bx bx-trending-up'></i>
+          </div>
+
+          <div class="info-banner-content">
+            <div class="info-banner-title">Weekly Performance Summary</div>
+            <div class="info-banner-text" id="weeklyPerformanceText">
+              Revenue increased by <strong>12.5%</strong> compared to last week.
+              Average daily revenue <strong>Rs. 32,100</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Divider -->
+        <!-- <div class="section-divider">
+          <div class="section-divider-line"></div>
+          <div class="section-divider-text">Business Growth & Order Management</div>
+          <div class="section-divider-line"></div>
+        </div> -->
+
+        <!-- Info Banner - Monthly Growth -->
+        <!-- <div class="info-banner" data-trend="up" id="monthlyGrowthBanner">
+          <div class="info-banner-icon">
+            <i class='bx bx-calendar-star'></i>
+          </div>
+
+          <div class="info-banner-content">
+            <div class="info-banner-title">Monthly Growth Insight</div>
+            <div class="info-banner-text" id="monthlyGrowthText">
+              February is your best month with <strong>Rs. 1,40,000</strong> in revenue! 
+              That's a <strong>27%</strong> increase from January.
+            </div>
+          </div>
+        </div> -->
+
+        <!-- Bar Chart and Pie Chart Grid -->
+        <div class="charts-grid">
+          <!-- Bar Chart - Monthly Revenue -->
+          <div class="chart-section">
+            <h3 class="chart-header">Monthly Revenue - Last 6 Months</h3>
+            <div class="chart-container">
+              <canvas id="monthlyBarChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Pie Chart - Order Status -->
+          <div class="chart-section">
+            <h3 class="chart-header">Order Status Distribution</h3>
+            <div class="chart-container">
+              <canvas id="orderStatusPieChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../scripts/admin_bar.js"></script>
+    <script src="../scripts/admin_dashboard.js"></script>
+  </body>
+</html>
