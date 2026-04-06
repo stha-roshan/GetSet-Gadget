@@ -25,6 +25,7 @@ import userStaticRoutes from "./routers/static_user.routes.js";
 import adminStaticRoutes from "./routers/static_admin.routes.js";
 import cryptoRoutes from "./routers/crypto.routes.js";
 import orderRoutes from "./routers/order.routes.js";
+import adminRoutes from "./routers/admin.routes.js";
 
 // ########## implement routes ##########
 
@@ -38,5 +39,6 @@ app.use("/", userStaticRoutes);
 app.use("/admin", adminStaticRoutes);
 app.use("/api/crypto", cryptoRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/admin", adminRoutes);
 
 export { app };

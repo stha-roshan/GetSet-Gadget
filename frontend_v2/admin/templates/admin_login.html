@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login - GetSet Gadgets</title>
+  <link rel="stylesheet" href="../styles/reset_admin.css"/>
+  <link rel="stylesheet" href="../styles/admin_login.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="page">
+
+  <main class="form-panel">
+    <div class="form-wrap">
+
+      <!-- Logo -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px;">
+        <div style="width:38px;height:38px;background:rgba(220,38,38,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#dc2626;letter-spacing:0.04em;">GetSet Gadgets</div>
+          <div style="font-size:9.5px;color:var(--text-gray);letter-spacing:0.1em;text-transform:uppercase;">Admin Portal</div>
+        </div>
+      </div>
+
+      <p class="form-eyebrow">Admin Access</p>
+      <h1 class="form-title">Sign in</h1>
+      <p class="form-sub">Enter your credentials to access the dashboard.</p>
+
+      <div class="field">
+        <label for="email">Email Address</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </span>
+          <input type="email" id="email" placeholder="admin@getsetgadgets.com" autocomplete="email"/>
+        </div>
+        <p class="field-hint" id="email-err">Please enter a valid email address.</p>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </span>
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password"/>
+          <button class="pw-toggle" id="pwToggle" type="button" aria-label="Toggle password">
+            <svg id="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg id="eye-off" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <p class="field-hint" id="pw-err">Password must be at least 6 characters.</p>
+      </div>
+
+      <button class="btn-login" id="loginBtn" type="button">
+        <span class="btn-text">Sign In to Dashboard</span>
+        <!-- <div class="spinner"></div> -->
+      </button>
+
+      <div class="divider">secured access</div>
+
+      <div class="secure-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Admin credentials required · GetSet Gadgets
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  const emailInput = document.getElementById('email');
+  const pwInput    = document.getElementById('password');
+  const emailErr   = document.getElementById('email-err');
+  const pwErr      = document.getElementById('pw-err');
+  const loginBtn   = document.getElementById('loginBtn');
+  const pwToggle   = document.getElementById('pwToggle');
+  const eyeOn      = document.getElementById('eye-on');
+  const eyeOff     = document.getElementById('eye-off');
+ 
+  // Toggle password visibility
+  pwToggle.addEventListener('click', () => {
+    const show = pwInput.type === 'password';
+    pwInput.type = show ? 'text' : 'password';
+    eyeOn.style.display  = show ? 'none' : '';
+    eyeOff.style.display = show ? '' : 'none';
+  });
+ 
+  // Clear errors on input
+  emailInput.addEventListener('input', () => {
+    emailErr.classList.remove('show');
+    emailInput.classList.remove('field-error');
+  });
+  pwInput.addEventListener('input', () => {
+    pwErr.classList.remove('show');
+    pwInput.classList.remove('field-error');
+  });
+ 
+  // Login
+  loginBtn.addEventListener('click', async () => {
+    let valid = true;
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+ 
+    if (!emailRe.test(emailInput.value.trim())) {
+      emailErr.classList.add('show');
+      emailInput.classList.add('field-error', 'shake');
+      setTimeout(() => emailInput.classList.remove('shake'), 400);
+      valid = false;
+    }
+ 
+    if (pwInput.value.length < 6) {
+      pwErr.classList.add('show');
+      pwInput.classList.add('field-error', 'shake');
+      setTimeout(() => pwInput.classList.remove('shake'), 400);
+      valid = false;
+    }
+ 
+    if (!valid) return;
+ 
+    loginBtn.classList.add('loading');
+ 
+    try {
+      const res = await fetch('http://localhost:3000/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',           // lets the server set cookies
+        body: JSON.stringify({
+          email: emailInput.value.trim(),
+          password: pwInput.value
+        })
+      });
+ 
+      const data = await res.json();
+ 
+      if (data.success) {
+        // If your server sets the cookie via Set-Cookie header (httpOnly),
+        // credentials:'include' above already handles it automatically.
+        // This line is a fallback for non-httpOnly tokens returned in the body:
+        if (data.data?.adminAccessToken) {
+          document.cookie = `adminAccessToken=${data.data.adminAccessToken}; path=/; SameSite=Lax`;
+        }
+        window.location.href = '/admin/dashboard';
+      } else {
+        loginBtn.classList.remove('loading');
+        // Show the error message under the password field
+        pwErr.textContent = data.message || 'Invalid credentials. Please try again.';
+        pwErr.classList.add('show');
+        pwInput.classList.add('field-error', 'shake');
+        setTimeout(() => pwInput.classList.remove('shake'), 400);
+      }
+ 
+    } catch (err) {
+      loginBtn.classList.remove('loading');
+      pwErr.textContent = 'Could not connect to server. Please try again.';
+      pwErr.classList.add('show');
+    }
+  });
+</script>
+
+</body>
+</html>

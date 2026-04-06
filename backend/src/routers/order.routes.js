@@ -9,10 +9,12 @@ import {
   getPendingOrders,
   getRevenueChartData,
   getMonthlyRevenueData,
-  getOrderStatusData
+  getOrderStatusData,
+  initiateEsewaPaymentCart,
+  getMyOrders
 
 } from "../controllers/order.controller.js";
-import { verifyUser } from "../middlewares/auth.middleware.js";
+import { verifyUser, isAdmin } from "../middlewares/auth.middleware.js";
 
 import multer from "multer";
 
@@ -20,6 +22,7 @@ const router = Router();
 const upload = multer();
 
 router.post("/initiate-esewa-payment", verifyUser, initiateEsewaPayment);
+router.post("/initiate-esewa-payment-cart", verifyUser, initiateEsewaPaymentCart);
 
 router.post("/verify-payment", verifyUser, verifyPayment);
 router.get("/completed-orders", getCompletedOrders)
@@ -30,5 +33,6 @@ router.get("/pending-orders", getPendingOrders);
 router.get("/revenue-chart-data", getRevenueChartData);
 router.get("/monthly-revenue-data", getMonthlyRevenueData);
 router.get("/order-status-data", getOrderStatusData);
+router.get("/my-orders", verifyUser, getMyOrders);
 
 export default router;

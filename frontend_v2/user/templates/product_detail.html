@@ -1,177 +1,199 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product Details</title>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../styles/reset.css">
-    <link rel="stylesheet" href="../styles/header_footer_util.css">
-    <link rel="stylesheet" href="../styles/product_detail.css">
-</head>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/reset.css" />
+    <link rel="stylesheet" href="../styles/header_footer_util.css" />
+    <link rel="stylesheet" href="../styles/product_detail.css" />
+  </head>
 
-<body>
+  <body>
     <div class="header-container">
-        <div class="header-bar">
-            <div class="logo">
-                <img src="" alt="Logo Placeholder" />
+      <div class="header-bar">
+        <div class="logo">
+          <img src="" alt="Logo Placeholder" />
+        </div>
+
+        <div class="search-wrapper">
+          <div class="search">
+            <i class="bx bx-search search-icon-visual"></i>
+            <input
+              type="text"
+              class="search-input"
+              id="searchInput"
+              placeholder="Search mouse, keyboard..."
+            />
+            <button class="search-button" id="searchButton">Search</button>
+          </div>
+
+          <div class="search-suggestions" id="suggestionsContainer"></div>
+        </div>
+
+        <div class="header-icons">
+          <div class="utility-icons">
+            <div
+              class="cart icon-btn"
+              title="View Cart"
+              onclick="window.location.href = '/my-cart'"
+            >
+              <i class="bx bx-cart"></i>
+              <span class="badge"></span>
+            </div>
+            <div
+              class="orders icon-btn"
+              title="My Orders"
+              onclick="window.location.href = '/my-orders'"
+            >
+              <i class="bx bx-shopping-bag"></i>
+            </div>
+          </div>
+
+          <div class="user-dropdown-container">
+            <div class="user icon-btn" id="userIcon" title="My Account">
+              <i class="bx bx-user-circle"></i>
             </div>
 
-            <div class="search-wrapper">
-                <div class="search">
-                    <i class="bx bx-search search-icon-visual"></i>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search mouse, keyboard..." />
-                    <button class="search-button" id="searchButton">Search</button>
-                </div>
-
-                <div class="search-suggestions" id="suggestionsContainer"></div>
-            </div>
-
-            <div class="header-icons">
-                <div class="utility-icons">
-                    <div class="cart icon-btn" title="View Cart" onclick="window.location.href = '/my-cart'">
-                        <i class="bx bx-cart"></i>
-                        <span class="badge"></span>
-                    </div>
-                    <div class="orders icon-btn" title="My Orders">
-                        <i class='bx bx-shopping-bag' ></i>
-                    </div>
-                </div>
-
-                <div class="user-dropdown-container">
-                    <div class="user icon-btn" id="userIcon" title="My Account">
-                        <i class="bx bx-user-circle"></i>
-                    </div>
-
-                    <div class="dropdown-menu" id="userDropdown">
-                        <!-- <a href="" class="dropdown-item">login</a>
+            <div class="dropdown-menu" id="userDropdown">
+              <!-- <a href="" class="dropdown-item">login</a>
                    <a href="" class="dropdown-item">Register</a> -->
-                    </div>
-                </div>
             </div>
+          </div>
         </div>
+      </div>
 
-        <div class="nav-bar">
-            <ul class="nav-links">
-                <li><a href="/home">Home</a></li>
-                <li><a href="#">Categories</a></li>
-                <li><a href="/products">Products</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Support</a></li>
-            </ul>
-        </div>
+      <div class="nav-bar">
+        <ul class="nav-links">
+          <li><a href="/home">Home</a></li>
+          <li><a href="#">Categories</a></li>
+          <li><a href="/products">Products</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+      </div>
     </div>
 
     <div class="main-container">
-        <div class="product-detail-wrapper">
-        
-            <div class="product-gallery">
-                <div class="main-image">
-                    <img src="" alt="Product Image" />
-                </div>
-            </div>
-            
-            <div class="product-info">
-                <h1 class="product-title">Loading...</h1>
-
-                <div class="product-price">
-                    <span class="current-price">$0.00</span>
-                </div>
-
-                <div class="product-availability">
-                    <!-- <i class='bx bx-check-circle'></i> -->
-                    <span>Loading...</span>
-                </div>
-
-                <div class="product-description">
-                    <h3>Description</h3>
-                    <p>Loading product description...</p>
-                </div>
-
-                <div class="product-options">
-                    <div class="option-group">
-                        <label>Quantity:</label>
-                        <div class="quantity-selector">
-                            <button class="qty-btn" id="decreaseQty">-</button>
-                            <input type="number" value="1" min="1" max="1" id="quantityInput" readonly>
-                            <button class="qty-btn" id="increaseQty">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-actions">
-                    <button class="btn-primary add-to-cart" id="btnAddToCart">
-                        <i class='bx bx-cart'></i>
-                        Add to Cart
-                    </button>
-                    <button class="btn-secondary buy-now" id="btnBuyNow">
-                        <i class='bx bx-shopping-bag'></i>
-                        Buy Now
-                    </button>
-                </div>
-
-                <div class="product-meta">
-                    <div class="meta-item">
-                        <span class="meta-label">Category:</span>
-                        <span class="meta-value">Loading...</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Brand:</span>
-                        <span class="meta-value">Loading...</span>
-                    </div>
-                </div>
-            </div>
+      <div class="product-detail-wrapper">
+        <div class="product-gallery">
+          <div class="main-image">
+            <img src="" alt="Product Image" />
+          </div>
         </div>
 
-        <div class="similar-products-section">
-            <h2 class="section-title">You May Also Like</h2>
+        <div class="product-info">
+          <h1 class="product-title">Loading...</h1>
 
-            <div class="similar-products-grid">
-                <p style="text-align: center; color: #6b7280; grid-column: 1/-1;">Loading similar products...</p>
+          <div class="product-price">
+            <span class="current-price">$0.00</span>
+          </div>
+
+          <div class="product-availability">
+            <!-- <i class='bx bx-check-circle'></i> -->
+            <span>Loading...</span>
+          </div>
+
+          <div class="product-description">
+            <h3>Description</h3>
+            <p>Loading product description...</p>
+          </div>
+
+          <div class="product-options">
+            <div class="option-group">
+              <label>Quantity:</label>
+              <div class="quantity-selector">
+                <button class="qty-btn" id="decreaseQty">-</button>
+                <input
+                  type="number"
+                  value="1"
+                  min="1"
+                  max="1"
+                  id="quantityInput"
+                  readonly
+                />
+                <button class="qty-btn" id="increaseQty">+</button>
+              </div>
             </div>
+          </div>
+
+          <div class="product-actions">
+            <button class="btn-primary add-to-cart" id="btnAddToCart">
+              <i class="bx bx-cart"></i>
+              Add to Cart
+            </button>
+            <button class="btn-secondary buy-now" id="btnBuyNow">
+              <i class="bx bx-shopping-bag"></i>
+              Buy Now
+            </button>
+          </div>
+
+          <div class="product-meta">
+            <div class="meta-item">
+              <span class="meta-label">Category:</span>
+              <span class="meta-value">Loading...</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Brand:</span>
+              <span class="meta-value">Loading...</span>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="similar-products-section">
+        <h2 class="section-title">You May Also Like</h2>
+
+        <div class="similar-products-grid">
+          <p style="text-align: center; color: #6b7280; grid-column: 1/-1">
+            Loading similar products...
+          </p>
+        </div>
+      </div>
     </div>
 
     <div class="toast-container" id="toast-container"></div>
     <footer>
-        <div class="footer-top">
-            <div class="footer-col">
-                <h4>Getset Gadget</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms & Conditions</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Customer Service</h4>
-                <ul>
-                    <li><a href="#">FAQs</a></li>
-                    <li><a href="#">Refund and Returns</a></li>
-                    <li><a href="#">Safe & Secure Shopping</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Service Hours</h4>
-                <ul>
-                    <li style="color: #999; font-size: 0.85rem">
-                        11:00 AM to 6:00 PM (NST)
-                    </li>
-                    <li style="margin-top: 15px">HOTLINE</li>
-                    <li style="color: var(--primary); font-weight: bold">015348976</li>
-                </ul>
-            </div>
+      <div class="footer-top">
+        <div class="footer-col">
+          <h4>Getset Gadget</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+          </ul>
         </div>
+        <div class="footer-col">
+          <h4>Customer Service</h4>
+          <ul>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Refund and Returns</a></li>
+            <li><a href="#">Safe & Secure Shopping</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Service Hours</h4>
+          <ul>
+            <li style="color: #999; font-size: 0.85rem">
+              11:00 AM to 6:00 PM (NST)
+            </li>
+            <li style="margin-top: 15px">HOTLINE</li>
+            <li style="color: var(--primary); font-weight: bold">015348976</li>
+          </ul>
+        </div>
+      </div>
 
-        <div class="footer-bottom">
-            <div style="font-size: 0.8rem; color: #666">
-                &copy; 2026 Getset Gadgets Computer Accessories. All rights reserved.
-            </div>
+      <div class="footer-bottom">
+        <div style="font-size: 0.8rem; color: #666">
+          &copy; 2026 Getset Gadgets Computer Accessories. All rights reserved.
         </div>
+      </div>
     </footer>
     <script src="../scripts/header_footer_util.js"></script>
     <script src="../scripts/product_detail.js"></script>
-</body>
-
+  </body>
 </html>

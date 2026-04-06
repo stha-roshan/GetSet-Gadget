@@ -2,12 +2,25 @@
 async function fetchAndRenderOrders() {
     const ordersGrid = document.getElementById('ordersGrid');
     
-    try {
+     try {
         // Show loading state
         ordersGrid.innerHTML = '<div class="loading">Loading orders...</div>';
-        
+
+        // Read whatever params are in the current URL and forward them to the API
+        const urlParams = new URLSearchParams(window.location.search);
+        const apiParams = new URLSearchParams();
+
+        // Map allowed URL params → API query params (just add new keys here in future)
+        const allowedParams = ['status', 'paymentStatus'];
+        allowedParams.forEach(key => {
+            if (urlParams.has(key)) apiParams.set(key, urlParams.get(key));
+        });
+
+        const queryString = apiParams.toString();
+        const apiUrl = `http://localhost:3000/api/orders/completed-orders${queryString ? '?' + queryString : ''}`;
+
         // Fetch orders from API
-        const response = await fetch('http://localhost:3000/api/orders/completed-orders');
+        const response = await fetch(apiUrl, { credentials: 'include' });
         const result = await response.json();
         
         if (!result.success || !result.data || result.data.length === 0) {

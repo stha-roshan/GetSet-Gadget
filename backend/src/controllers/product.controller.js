@@ -59,44 +59,30 @@ const editProduct = asyncHandler(async (req, res) => {
   }
 
   const validations = buildProductValidation(req.body);
-
   const validation = validateFields(validations);
   if (!validation.isValid) {
-    throw new ApiError(
-      400,
-      "Edit Product Validation error",
-      MODULE,
-      validation.errors,
-    );
+    throw new ApiError(400, "Edit Product Validation error", MODULE, validation.errors);
   }
 
-  const {
-    name,
-    description,
-    category,
-    brand,
-    price,
-    stock,
-    image,
-    totalSales,
-  } = req.body;
-
-  const signedImage = await uploadOnCloudinary(image);
-  console.log(image);
-  if (!signedImage) {
-    throw new ApiError(500, "Product image upload failed", MODULE);
-  }
-  const signedImageUrl = signedImage.secure_url;
+  const { name, description, category, brand, price, stock, totalSales } = req.body;
 
   const updateData = {};
-  if (name !== undefined) updateData.name = name.trim();
+  if (name !== undefined)        updateData.name = name.trim();
   if (description !== undefined) updateData.description = description.trim();
-  if (category !== undefined) updateData.category = category;
-  if (brand !== undefined) updateData.brand = brand;
-  if (price !== undefined) updateData.price = Number(price);
-  if (stock !== undefined) updateData.stock = Number(stock);
-  if (image !== undefined) updateData.image = signedImageUrl;
-  if (totalSales !== undefined) updateData.totalSales = Number(totalSales);
+  if (category !== undefined)    updateData.category = category;
+  if (brand !== undefined)       updateData.brand = brand;
+  if (price !== undefined)       updateData.price = Number(price);
+  if (stock !== undefined)       updateData.stock = Number(stock);
+  if (totalSales !== undefined)  updateData.totalSales = Number(totalSales);
+
+  // Only upload image if a new file was actually sent
+  if (req.file) {
+    const signedImage = await uploadOnCloudinary(req.file.path);
+    if (!signedImage) {
+      throw new ApiError(500, "Product image upload failed", MODULE);
+    }
+    updateData.image = signedImage.secure_url;
+  }
 
   const updateProduct = await Product.findByIdAndUpdate(productId, updateData, {
     new: true,
@@ -105,14 +91,7 @@ const editProduct = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        "Product data updated successfully",
-        updateProduct,
-        MODULE,
-      ),
-    );
+    .json(new ApiResponse(200, "Product data updated successfully", updateProduct, MODULE));
 });
 
 const getProductById = asyncHandler(async (req, res) => {
@@ -230,4 +209,40 @@ const getSimilarProducts = asyncHandler(async (req, res) => {
   );
 });
 
-export { createProduct, editProduct, getProductById, fetchAllProduct, searchProducts, getSimilarProducts };
+const deleteProduct = asyncHandler(async (req, res) => {
+  const { productId } = req.params;
+
+  if (!productId || !productId.match(/^[0-9a-fA-F]{24}$/)) {
+    throw new ApiError(400, "Invalid product ID format", MODULE);
+  }
+
+  const product = await Product.findByIdAndDelete(productId);
+
+  if (!product) {
+    throw new ApiError(404, "Product not found", MODULE);
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Product deleted successfully", product, MODULE));
+});
+
+const getBestSellers = asyncHandler(async (req, res) => {
+    const bestSellers = await Product.find()
+        .populate("category", "name")
+        .populate("brand", "name")
+        .sort({ totalSales: -1 })
+        .limit(4);
+
+    if (!bestSellers || bestSellers.length === 0) {
+        return res
+            .status(200)
+            .json(new ApiResponse(200, "No products found", []));
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "Best sellers fetched successfully", bestSellers));
+});
+
+export { createProduct, editProduct, getProductById, fetchAllProduct, searchProducts, getSimilarProducts, deleteProduct, getBestSellers };

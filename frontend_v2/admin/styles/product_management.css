@@ -428,3 +428,76 @@ html {
   outline: 2px solid var(--accent-red);
   outline-offset: 2px;
 }
+
+
+/* Edit Dropdown */
+.edit-dropdown-wrap {
+    flex: 1;
+    position: relative;
+}
+
+.edit-toggle-btn {
+    width: 100%;
+    justify-content: center;
+    gap: 0.3rem;
+}
+
+.edit-chevron {
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+}
+
+.edit-dropdown.open + .edit-toggle-btn .edit-chevron,
+.edit-dropdown-wrap:has(.edit-dropdown.open) .edit-chevron {
+    transform: rotate(180deg);
+}
+
+.edit-dropdown {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    box-shadow: var(--shadow-hover);
+    overflow: hidden;
+    z-index: 10;
+}
+
+.edit-dropdown.open {
+    display: block;
+    animation: dropUp 0.15s ease;
+}
+
+@keyframes dropUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.edit-dropdown button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: "DM Sans", sans-serif;
+    color: var(--text-gray);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    text-align: left;
+}
+
+.edit-dropdown button:hover {
+    background: rgba(220, 38, 38, 0.05);
+    color: var(--accent-red);
+}
+
+.edit-dropdown button i {
+    font-size: 1rem;
+}

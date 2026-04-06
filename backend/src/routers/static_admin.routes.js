@@ -1,12 +1,13 @@
 import { Router } from "express";
 import path from "path";
+import { isAdmin } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 const __dirname = import.meta.dirname;
 
 // ############### Dashboard ###############
 
-router.get("/dashboard", (req, res) => {
+router.get("/dashboard", isAdmin, (req, res) => {
   const pagePath = path.join(
     __dirname,
     "../../../frontend_v2/admin/templates/admin_dashboard.html"
@@ -16,7 +17,7 @@ router.get("/dashboard", (req, res) => {
 
 // ############### product management ###############
 
-router.get("/product-management", (req, res) => {
+router.get("/product-management", isAdmin, (req, res) => {
   const pagePath = path.join(
     __dirname,
     "../../../frontend_v2/admin/templates/product_management.html"
@@ -24,7 +25,7 @@ router.get("/product-management", (req, res) => {
   res.sendFile(pagePath);
 });
 
-router.get("/create-product", (req, res) => {
+router.get("/create-product", isAdmin, (req, res) => {
   const pagePath = path.join(
     __dirname,
     "../../../frontend/templetes/product_form.html"
@@ -32,8 +33,16 @@ router.get("/create-product", (req, res) => {
   res.sendFile(pagePath);
 });
 
+router.get("/edit-product", isAdmin, (req, res) => {
+  const pagePath = path.join(
+    __dirname,
+    "../../../frontend_v2/admin/templates/product_edit_info.html"
+  );
+  res.sendFile(pagePath);
+});
+
 // ############### order management ###############
-router.get("/order-management", (req, res) => {
+router.get("/order-management", isAdmin,(req, res) => {
   const pagePath = path.join(
     __dirname,
     "../../../frontend_v2/admin/templates/order_management.html"
@@ -41,7 +50,7 @@ router.get("/order-management", (req, res) => {
   res.sendFile(pagePath);
 });
 
-router.get("/order-detail", (req, res) => {
+router.get("/order-detail", isAdmin, (req, res) => {
   const pagePath = path.join(
     __dirname,
     "../../../frontend_v2/admin/templates/order_detail.html"
@@ -51,7 +60,7 @@ router.get("/order-detail", (req, res) => {
 
 // ############### category management ###############
 
-router.get("/create-category", (req, res) => {
+router.get("/create-category", isAdmin, (req, res) => {
   const pagePath = path.join(
     __dirname,
     "../../../frontend/templetes/category_form.html"
@@ -59,7 +68,7 @@ router.get("/create-category", (req, res) => {
   res.sendFile(pagePath);
 });
 
-router.get("/category-management", (req, res) => {
+router.get("/category-management", isAdmin, (req, res) => {
   const pagePath = path.join(
     __dirname,
     "../../../frontend/templetes/category_management.html"
@@ -70,7 +79,7 @@ router.get("/category-management", (req, res) => {
 
 // ############### brand management ###############
 
-router.get("/create-brand", (req, res) => {
+router.get("/create-brand", isAdmin, (req, res) => {
   const pagePath = path.join(
     __dirname,
     "../../../frontend/templetes/brand_form.html"
@@ -78,10 +87,20 @@ router.get("/create-brand", (req, res) => {
   res.sendFile(pagePath);
 });
 
-router.get("/brand-management", (req, res) => {
+router.get("/brand-management", isAdmin, (req, res) => {
   const pagePath = path.join(
     __dirname,
     "../../../frontend/templetes/brand_management.html"
+  );
+  res.sendFile(pagePath);
+});
+
+// ############### signin/ signup ###############
+
+router.get("/signin", (req, res) => {
+  const pagePath = path.join(
+    __dirname,
+    "../../../frontend_v2/admin/templates/admin_login.html"
   );
   res.sendFile(pagePath);
 });

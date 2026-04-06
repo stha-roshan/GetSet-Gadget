@@ -47,10 +47,10 @@
                         <h1 style="color: green;">Payment Successful!</h1>
                         <p>Order ID: ${result.data.orderNumber}</p>
                         <p>You will be redirected to your profile in 5 seconds.</p>
-                        <a href="/profile.html">Go to Profile Now</a>
+                        <a href="/home">Go to Home Now</a>
                     `;
                     // Redirect after 5 seconds
-                    setTimeout(() => { window.location.href = "/profile.html"; }, 5000);
+                    setTimeout(() => { window.location.href = "/home"; }, 5000);
                 } else {
                     showError(result.message);
                 }

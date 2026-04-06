@@ -49,10 +49,19 @@ router.get("/product-detail", (req, res) => {
 router.get("/my-cart", (req, res) => {
   const homePath = path.join(
     __dirname,
-    "../../../frontend/templetes/my_cart.html"
+    "../../../frontend_v2/user/templates/cart.html"
   );
   res.sendFile(homePath);
 });
+
+router.get("/my-orders", verifyUser, (req, res) => {
+  const homePath = path.join(
+    __dirname,
+    "../../../frontend_v2/user/templates/my_orders.html"
+  );
+  res.sendFile(homePath);
+});
+
 
 router.get("/checkout", verifyUser, (req, res) => {
   const pagePath = path.join(

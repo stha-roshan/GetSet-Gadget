@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leuze | Your Shopping Cart</title>
+    <link href="https://cdn.boxicons.com/2.1.4/css/boxicons.min.css" rel="stylesheet">
+      <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/reset.css" />
+  <link rel="stylesheet" href="../styles/header_footer_util.css" />
+    <style>
+        :root {
+            --primary: #e30613;
+            --dark: #333;
+            --light: #f4f4f4;
+            --border: #e5e5e5;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #fff; color: var(--dark); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        
+        .cart-header-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
+            font-weight: bold;
+            color: #777;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .product-info { display: flex; align-items: center; gap: 15px; }
+        .product-info img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+        .product-details h4 { margin: 0; font-size: 1rem; }
+
+        .qty-controls { display: flex; align-items: center; border: 1px solid var(--border); width: fit-content; border-radius: 4px; }
+        .qty-btn { background: none; border: none; padding: 5px 12px; cursor: pointer; font-weight: bold; }
+        .qty-val { padding: 0 10px; font-weight: 600; }
+
+        .price-text { font-weight: 600; }
+        .subtotal-text { font-weight: 700; color: var(--primary); }
+        .remove-icon { color: #ff4d4d; cursor: pointer; font-size: 1.5rem; transition: 0.2s; }
+        .remove-icon:hover { transform: scale(1.2); }
+
+        .summary-card {
+            background: #f9f9f9;
+            padding: 2rem;
+            margin-top: 2rem;
+            border-radius: 8px;
+            width: 350px;
+            margin-left: auto;
+        }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .total-row { border-top: 2px solid #ddd; padding-top: 15px; font-size: 1.2rem; font-weight: bold; }
+        .checkout-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="header-container">
+    <div class="header-bar">
+      <div class="logo">
+        <img src="" alt="Logo Placeholder" />
+      </div>
+
+      <div class="search-wrapper">
+        <div class="search">
+          <i class="bx bx-search search-icon-visual"></i>
+          <input type="text" class="search-input" id="searchInput" placeholder="Search mouse, keyboard..." />
+          <button class="search-button" id="searchButton">Search</button>
+        </div>
+
+        <div class="search-suggestions" id="suggestionsContainer"></div>
+      </div>
+
+      <div class="header-icons">
+        <div class="utility-icons">
+          <div class="cart icon-btn" title="View Cart" onclick="window.location.href = '/my-cart'">
+            <i class="bx bx-cart"></i>
+            <span class="badge"></span>
+          </div>
+          <div class="orders icon-btn" title="My Orders" onclick="window.location.href = '/my-orders'">
+            <i class='bx bx-shopping-bag'></i>
+          </div>
+        </div>
+
+        <div class="user-dropdown-container">
+          <div class="user icon-btn" id="userIcon" title="My Account">
+            <i class="bx bx-user-circle"></i>
+          </div>
+
+          <div class="dropdown-menu" id="userDropdown">
+            <!-- <a href="" class="dropdown-item">login</a>
+                   <a href="" class="dropdown-item">Register</a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <ul class="nav-links">
+        <li><a href="/home">Home</a></li>
+        <li><a href="#">Categories</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Support</a></li>
+      </ul>
+    </div>
+  </div>
+
+
+
+
+
+<div class="container">
+    <h1>Shopping Cart</h1>
+    
+    <div id="cart-container">
+        <div class="cart-header-grid">
+            <div>Product</div>
+            <div>Price</div>
+            <div>Quantity</div>
+            <div>Subtotal</div>
+            <div></div>
+        </div>
+        <div id="cart-items-list">
+            </div>
+
+        <div class="summary-card">
+            <div class="summary-row"><span>Subtotal</span> <span id="summary-subtotal">₹0</span></div>
+            <div class="summary-row"><span>Shipping</span> <span>FREE</span></div>
+            <div class="summary-row total-row"><span>Total</span> <span id="summary-total">₹0</span></div>
+            <button class="checkout-btn">PROCEED TO CHECKOUT</button>
+        </div>
+    </div>
+
+    <div id="empty-cart-msg" style="display: none; text-align: center; padding: 50px;">
+        <i class='bx bx-cart-alt' style="font-size: 5rem; color: #ccc;"></i>
+        <h2>Your cart is empty</h2>
+        <a href="/home" style="color: var(--primary);">Go back to shopping</a>
+    </div>
+</div>
+
+<script src="../scripts/cart.js"></script>
+<script src="../scripts/header_footer_util.js"></script>
+<script>
+    // const API_BASE_URL = '/api/cart';
+
+    // async function fetchCart() {
+    //     const token = localStorage.getItem('accessToken');
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`,
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         });
+
+    //         const result = await response.json();
+    //         console.log("Cart Data:", result);
+
+    //         if (result.success && result.data.items.length > 0) {
+    //             renderCart(result.data.items);
+    //         } else {
+    //             document.getElementById('cart-container').style.display = 'none';
+    //             document.getElementById('empty-cart-msg').style.display = 'block';
+    //         }
+    //     } catch (error) {
+    //         console.error("Fetch Error:", error);
+    //     }
+    // }
+
+    // function renderCart(items) {
+    //     const listContainer = document.getElementById('cart-items-list');
+    //     listContainer.innerHTML = '';
+    //     let grandTotal = 0;
+
+    //     items.forEach(item => {
+    //         // Note: your API returns product details inside "productId"
+    //         const product = item.productId;
+    //         const lineTotal = product.price * item.quantity;
+    //         grandTotal += lineTotal;
+
+    //         const itemHtml = `
+    //             <div class="cart-item">
+    //                 <div class="product-info">
+    //                     <img src="${product.image}" alt="${product.name}">
+    //                     <div class="product-details">
+    //                         <h4>${product.name}</h4>
+    //                     </div>
+    //                 </div>
+    //                 <div class="price-text">₹${product.price}</div>
+    //                 <div class="qty-controls">
+    //                     <button class="qty-btn" onclick="updateQty('${product._id}', ${item.quantity - 1})">-</button>
+    //                     <span class="qty-val">${item.quantity}</span>
+    //                     <button class="qty-btn" onclick="updateQty('${product._id}', ${item.quantity + 1})">+</button>
+    //                 </div>
+    //                 <div class="subtotal-text">₹${lineTotal}</div>
+    //                 <div>
+    //                     <i class='bx bx-trash remove-icon' onclick="removeItem('${product._id}')"></i>
+    //                 </div>
+    //             </div>
+    //         `;
+    //         listContainer.innerHTML += itemHtml;
+    //     });
+
+    //     document.getElementById('summary-subtotal').innerText = `₹${grandTotal}`;
+    //     document.getElementById('summary-total').innerText = `₹${grandTotal}`;
+    // }
+
+    // async function updateQty(productId, newQty) {
+    //     if (newQty < 1) return;
+    //     const token = localStorage.getItem('accessToken');
+    //     const response = await fetch(`${API_BASE_URL}/update`, {
+    //         method: 'PUT',
+    //         headers: { 
+    //             'Authorization': `Bearer ${token}`,
+    //             'Content-Type': 'application/json' 
+    //         },
+    //         body: JSON.stringify({ productId, quantity: newQty })
+    //     });
+    //     if (response.ok) fetchCart();
+    // }
+
+    // async function removeItem(productId) {
+    //     const token = localStorage.getItem('accessToken');
+    //     const response = await fetch(`${API_BASE_URL}/remove/${productId}`, {
+    //         method: 'DELETE',
+    //         headers: { 'Authorization': `Bearer ${token}` }
+    //     });
+    //     if (response.ok) fetchCart();
+    // }
+
+    // document.addEventListener('DOMContentLoaded', fetchCart);
+    
+</script>
+
+
+</body>
+</html>

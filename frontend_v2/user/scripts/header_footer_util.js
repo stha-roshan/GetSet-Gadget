@@ -40,15 +40,21 @@ if (token) {
   logoutBtn.textContent = "Logout";
   
   // Logout Logic
-  logoutBtn.addEventListener("click", (e) => {
+logoutBtn.addEventListener("click", async (e) => {
     e.preventDefault();
-    localStorage.removeItem("accessToken"); // Remove token
-    // Optional: Remove other user data if stored
-    // localStorage.removeItem("user"); 
-    setInterval(() => {
-      window.location.href = "/login"; // Redirect to login or home
-    }, 1000);
-  });
+
+    try {
+        await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include'  
+        });
+    } catch (err) {
+        console.error('Logout error:', err);
+    }
+
+    localStorage.removeItem("accessToken");
+    window.location.href = "/login";
+});
 
   dropdownMenu.appendChild(accountBtn);
   dropdownMenu.appendChild(logoutBtn);

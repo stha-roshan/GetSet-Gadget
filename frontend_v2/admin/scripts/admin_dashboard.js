@@ -361,18 +361,18 @@ function createOrderStatusPieChart(statusData) {
           statusData.cancelled || 0
         ],
         backgroundColor: [
-          'rgba(34, 197, 94, 0.8)',   // Green - Delivered (#22c55e)
-          'rgba(59, 130, 246, 0.8)',  // Blue - Shipped (#3b82f6)
-          'rgba(99, 102, 241, 0.8)',  // Indigo - Confirmed (#6366f1)
-          'rgba(251, 191, 36, 0.8)',  // Amber - Pending (#fbbf24)
-          'rgba(239, 68, 68, 0.8)'    // Red - Cancelled (#ef4444)
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(99, 102, 241, 0.8)',
+          'rgba(251, 191, 36, 0.8)',
+          'rgba(239, 68, 68, 0.8)'
         ],
         borderColor: [
-          '#22c55e',  // Green border
-          '#3b82f6',  // Blue border
-          '#6366f1',  // Indigo border
-          '#fbbf24',  // Amber border
-          '#ef4444'   // Red border
+          '#22c55e',
+          '#3b82f6',
+          '#6366f1',
+          '#fbbf24',
+          '#ef4444'
         ],
         borderWidth: 2,
         hoverOffset: 10
@@ -381,6 +381,15 @@ function createOrderStatusPieChart(statusData) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      onClick: (event, elements) => {
+        if (elements.length === 0) return;
+        const statusMap = ['delivered', 'shipped', 'confirmed', 'pending', 'cancelled'];
+        const clickedStatus = statusMap[elements[0].index];
+        window.location.href = `http://localhost:3000/admin/order-management?status=${clickedStatus}&paymentStatus=completed`;
+      },
+      onHover: (event, elements) => {
+        event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+      },
       plugins: {
         legend: {
           position: 'bottom',
@@ -522,4 +531,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadRevenueChartData();
   await loadMonthlyRevenueData();
   await loadOrderStatusData();
+});
+
+// click action on metric cards 
+
+const pendingOrdersCard = document.getElementById("pending-orders-card");
+pendingOrdersCard.addEventListener("click", () => {
+  window.location.href = "http://localhost:3000/admin/order-management?status=pending&paymentStatus=completed";
 });

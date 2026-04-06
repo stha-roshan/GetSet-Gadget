@@ -7,8 +7,12 @@ import {
   fetchAllProduct,
   searchProducts,
   getSimilarProducts,
+  deleteProduct,
+  getBestSellers
 } from "../controllers/product.controller.js";
+import { isAdmin } from "../middlewares/auth.middleware.js";
 import path from "path";
+
 
 const router = Router();
 
@@ -55,6 +59,8 @@ router.patch("/edit/:productId", upload.single("image"), editProduct);
 router.get("/fetchAll", fetchAllProduct)
 router.get("/search", searchProducts);
 router.get("/similar", getSimilarProducts);
+router.get("/best-sellers", getBestSellers);
 router.get("/:productId", getProductById);
+router.delete("/:productId", isAdmin, deleteProduct);
 
 export default router;
