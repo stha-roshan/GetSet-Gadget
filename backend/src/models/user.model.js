@@ -4,34 +4,19 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    name: {
-      type: String,
-      require: true,
-    },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phoneNumber: { type: Number, required: true },
+    password: { type: String, required: true },
+    salt: { type: String, required: true },
+    refreshToken: { type: String, default: "" },
 
-    email: {
-      type: String,
-      required: true,
+    // Add these two fields below
+    passwordChangeOtp: {
+      type: String, // String is better in case an OTP starts with 0
     },
-
-    phoneNumber: {
-      type: Number,
-      required: true,
-    },
-
-    password: {
-      type: String,
-      required: true,
-    },
-
-    salt: {
-      type: String,
-      required: true,
-    },
-
-    refreshToken: {
-      type: String,
-      default: "",
+    passwordChangeOtpExpiry: {
+      type: Date,
     },
   },
   { timestamps: true }

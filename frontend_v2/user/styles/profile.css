@@ -1,0 +1,169 @@
+/* Profile Page Specific Styles
+  Relies on variables defined in headerfooter.css / reset.css
+*/
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+}
+
+.profile-container {
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+}
+
+/* Left Sidebar: User Summary */
+.profile-sidebar {
+  background: var(--bg-glass);
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  height: fit-content;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+}
+
+.profile-avatar {
+  font-size: 80px;
+  color: var(--primary);
+  margin-bottom: 15px;
+}
+
+.profile-sidebar h3 {
+  margin-bottom: 5px;
+  font-size: 1.4rem;
+  color: var(--text-main);
+}
+
+.profile-sidebar p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+}
+
+.profile-nav-tabs {
+  list-style: none;
+  text-align: left;
+}
+
+.profile-nav-tabs li {
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.profile-nav-tabs li.active {
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: var(--shadow-glow-red);
+}
+
+.profile-nav-tabs li:hover:not(.active) {
+  background: var(--bg-glass-hover);
+}
+
+/* Right Side: Content Area */
+.profile-content {
+  background: var(--white);
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-soft);
+}
+
+.content-section {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.content-section.active {
+  display: block;
+}
+
+.content-section h2 {
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  color: var(--text-main);
+  border-bottom: 2px solid var(--primary);
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  background: var(--element-bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-main);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-glow-red);
+  background: var(--white);
+}
+
+.save-btn {
+  margin-top: 15px;
+  padding: 12px 35px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  /* Uses your existing primary red and text-white variables */
+  background: var(--primary);
+  color: var(--white); 
+  font-weight: 600;
+}
+
+.save-btn:hover {
+  background: var(--accent-secondary);
+  box-shadow: var(--shadow-glow-red);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .profile-container {
+    grid-template-columns: 1fr;
+    margin: 30px auto;
+  }
+  
+  .profile-content {
+    padding: 25px;
+  }
+}

@@ -15,6 +15,8 @@ import {
   isValidPassword,
 } from "../utils/generalValidators.js";
 import { validateFields } from "../utils/validatorFunctions.js";
+import { sendOtpMail } from "../utils/mailService.js";
+import crypto from "crypto";
 
 const MODULE = "[USER] [user.controller.js]";
 
@@ -179,65 +181,84 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Logout successful", null, MODULE));
 });
 
-const changePassword = asyncHandler(async (req, res) => {
+const requestPasswordChangeOtp = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
   const validation = validateFields([
-    {
-      value: currentPassword,
-      field: "currentPassword",
-      validator: (val) => val && val.length > 0,
-      message: "Current password is required",
-    },
-    {
-      value: newPassword,
-      field: "newPassword",
-      validator: isValidPassword,
-      message: "New password must be at least 8 characters long",
-    },
+    { value: currentPassword, field: "currentPassword", validator: (val) => val?.length > 0, message: "Current password is required" },
+    { value: newPassword, field: "newPassword", validator: isValidPassword, message: "New password must be at least 8 characters long" },
   ]);
 
-  if (!validation.isValid) {
-    throw new ApiError(400, "Validation failed", MODULE, validation.errors);
-  }
+  if (!validation.isValid) throw new ApiError(400, "Validation failed", MODULE, validation.errors);
 
   const user = await User.findById(req.user._id);
+  if (!user) throw new ApiError(404, "User not found", MODULE);
+
+  const isMatch = await verifyPassword(currentPassword, user.password, user.salt);
+  if (!isMatch) throw new ApiError(401, "Invalid current password", MODULE);
+
+  const samePassword = await verifyPassword(newPassword, user.password, user.salt);
+  if (samePassword) throw new ApiError(400, "New password cannot be the same as the current password", MODULE);
+
+  // Generate 6-digit OTP
+  const otp = crypto.randomInt(100000, 999999).toString();
+  const expiry = Date.now() + 10 * 60 * 1000; // 10 mins
+
+  await User.updateOne(
+    { _id: req.user._id }, 
+    { passwordChangeOtp: otp, passwordChangeOtpExpiry: expiry }
+  );
+
+  try {
+    await sendOtpMail(user.email, otp);
+  } catch (error) {
+    console.error("Mail Error:", error);
+    throw new ApiError(500, "Failed to send email", MODULE);
+  }
+
+  return res.status(200).json(new ApiResponse(200, "OTP sent to your email", null, MODULE));
+});
+
+const verifyAndChangePassword = asyncHandler(async (req, res) => {
+  const { otp, newPassword } = req.body;
+
+  const user = await User.findById(req.user._id);
+  
+  if (
+    !user || 
+    user.passwordChangeOtp !== otp || 
+    !user.passwordChangeOtpExpiry || 
+    user.passwordChangeOtpExpiry < Date.now()
+  ) {
+    throw new ApiError(400, "Invalid or expired OTP", MODULE);
+  }
+
+  const { salt, hash } = await hashPassword(newPassword);
+  
+  await User.updateOne(
+    { _id: req.user._id }, 
+    { 
+      password: hash, 
+      salt, 
+      $unset: { passwordChangeOtp: 1, passwordChangeOtpExpiry: 1 } 
+    }
+  );
+
+  return res.status(200).json(new ApiResponse(200, "Password changed successfully", null, MODULE));
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+
+  const user = await User.findById(req.user._id).select("-password -salt -refreshToken -passwordChangeOtp -passwordChangeOtpExpiry");
 
   if (!user) {
     throw new ApiError(404, "User not found", MODULE);
   }
 
-  const isValidPassword = await verifyPassword(
-    currentPassword,
-    user.password,
-    user.salt
-  );
-
-  if (!isValidPassword) {
-    throw new ApiError(401, "Invalid current password", MODULE);
-  }
-
-  const samePassword = await verifyPassword(
-    newPassword,
-    user.password,
-    user.salt
-  );
-
-  if (samePassword) {
-    throw new ApiError(
-      400,
-      "New password cannot be the same as the current password",
-      MODULE
-    );
-  }
-
-  const { salt, hash } = await hashPassword(newPassword);
-
-  await User.updateOne({ _id: req.user._id }, { password: hash, salt });
-
   return res
     .status(200)
-    .json(new ApiResponse(200, "Password changed successfully", null, MODULE));
+    .json(new ApiResponse(200, "User profile fetched successfully", user, MODULE));
 });
 
-export { registerUser, loginUser, logoutUser, changePassword };
+
+export { registerUser, loginUser, logoutUser, requestPasswordChangeOtp, verifyAndChangePassword, getCurrentUser };

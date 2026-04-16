@@ -62,6 +62,14 @@ router.get("/my-orders", verifyUser, (req, res) => {
   res.sendFile(homePath);
 });
 
+router.get("/profile", verifyUser, (req, res) => {
+  const homePath = path.join(
+    __dirname,
+    "../../../frontend_v2/user/templates/profile.html"
+  );
+  res.sendFile(homePath);
+});
+
 
 router.get("/checkout", verifyUser, (req, res) => {
   const pagePath = path.join(
